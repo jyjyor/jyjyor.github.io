@@ -94,6 +94,14 @@
   .frame .photo-inner { position: absolute; inset: 0; transition: transform 0.8s ease; }
   .frame:hover .photo-inner { transform: scale(1.04); }
 
+  /* Natural-sized photo rows — no fixed height, no crop */
+  .photo-row { display: grid; gap: 4px; margin-bottom: 4px; }
+  .photo-row-2 { grid-template-columns: 1fr 1fr; }
+  .photo-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .photo-row .frame { height: auto; position: relative; overflow: hidden; }
+  .photo-row .frame img { width: 100%; height: auto; display: block; transition: transform 0.8s ease; }
+  .photo-row .frame:hover img { transform: scale(1.02); }
+
   /* Warm neutral placeholders — real photos will provide the color */
   .p1 { background: radial-gradient(ellipse 50% 40% at 45% 55%, rgba(215,208,192,0.5) 0%, transparent 65%), linear-gradient(175deg, #bab4aa 0%, #a8a298 42%, #b2ac9e 72%, #a6a094 100%); }
   .p2 { background: radial-gradient(ellipse 75% 38% at 35% 55%, rgba(200,194,176,0.38) 0%, transparent 68%), linear-gradient(135deg, #a4a89c 0%, #929690 52%, #9ca298 100%); }
@@ -123,7 +131,7 @@
   .lightbox.open { opacity: 1; pointer-events: all; }
   .lightbox-backdrop { position: absolute; inset: 0; background: rgba(16,14,12,0.96); }
   .lightbox-content { position: relative; z-index: 2; max-width: 90vw; max-height: 90vh; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
-  .lightbox-frame { width: min(80vh,85vw); aspect-ratio: 3/4; position: relative; overflow: hidden; }
+  .lightbox-frame { width: min(80vh,85vw); aspect-ratio: 3/2; position: relative; overflow: hidden; }
   .lightbox-photo { position: absolute; inset: 0; }
   .lightbox-meta { text-align: center; }
   .lightbox-meta h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; font-style: italic; color: var(--cream); margin-bottom: 0.4rem; }
@@ -213,36 +221,36 @@
 </div>
 
 <section class="cinema-section">
-  <div class="cinema-full reveal" data-index="0">
+  <div class="cinema-full reveal" data-index="0" data-cat="documentary">
     <div class="photo-inner p1"></div>
     <div class="photo-caption"><h3>Pressed Into Pavement</h3><p>Los Angeles · 2024 · Documentary</p></div>
     <span class="photo-num">01</span>
     <div class="frame-overlay" data-index="0"></div>
   </div>
   <div class="cinema-duo">
-    <div class="frame reveal" data-index="1">
+    <div class="frame reveal" data-index="1" data-cat="documentary">
       <div class="photo-inner p3"></div>
       <div class="photo-caption"><h3>Left on the Corner</h3><p>Los Angeles · 2024 · Documentary</p></div>
       <span class="photo-num">02</span><div class="frame-overlay" data-index="1"></div>
     </div>
-    <div class="frame reveal reveal-delay-1" data-index="2">
+    <div class="frame reveal reveal-delay-1" data-index="2" data-cat="street">
       <div class="photo-inner p4"></div>
       <div class="photo-caption"><h3>Residue</h3><p>Santa Monica · 2024 · Street</p></div>
       <span class="photo-num">03</span><div class="frame-overlay" data-index="2"></div>
     </div>
   </div>
   <div class="cinema-trio">
-    <div class="frame reveal" data-index="3">
+    <div class="frame reveal" data-index="3" data-cat="still-life">
       <div class="photo-inner p5"></div>
       <div class="photo-caption"><h3>Fragments</h3><p>Los Angeles · 2024 · Still Life</p></div>
       <span class="photo-num">04</span><div class="frame-overlay" data-index="3"></div>
     </div>
-    <div class="frame reveal reveal-delay-1" data-index="4">
+    <div class="frame reveal reveal-delay-1" data-index="4" data-cat="street">
       <div class="photo-inner p2"></div>
       <div class="photo-caption"><h3>Overcast</h3><p>Los Angeles · 2023 · Street</p></div>
       <span class="photo-num">05</span><div class="frame-overlay" data-index="4"></div>
     </div>
-    <div class="frame reveal reveal-delay-2" data-index="5">
+    <div class="frame reveal reveal-delay-2" data-index="5" data-cat="documentary">
       <div class="photo-inner p7"></div>
       <div class="photo-caption"><h3>Golden Hour</h3><p>Los Angeles · 2024 · Documentary</p></div>
       <span class="photo-num">06</span><div class="frame-overlay" data-index="5"></div>
@@ -260,58 +268,50 @@
 
 <section class="cinema-section">
   <div class="cinema-mixed">
-    <div class="frame reveal" data-index="6">
+    <div class="frame reveal" data-index="6" data-cat="street">
       <div class="photo-inner p9"></div>
       <div class="photo-caption"><h3>Blue Hour</h3><p>Downtown LA · 2023 · Street</p></div>
       <span class="photo-num">07</span><div class="frame-overlay" data-index="6"></div>
     </div>
-    <div class="frame reveal reveal-delay-1" data-index="7">
+    <div class="frame reveal reveal-delay-1" data-index="7" data-cat="street">
       <div class="photo-inner p6"></div>
       <div class="photo-caption"><h3>Midnight Commute</h3><p>Los Angeles · 2023 · Street</p></div>
       <span class="photo-num">08</span><div class="frame-overlay" data-index="7"></div>
     </div>
   </div>
-  <div class="cinema-wide reveal" data-index="8">
+  <div class="cinema-wide reveal" data-index="8" data-cat="documentary">
     <div class="photo-inner p8"></div>
     <div class="photo-caption"><h3>The Last Bus</h3><p>Los Angeles · 2024 · Documentary</p></div>
     <span class="photo-num">09</span><div class="frame-overlay" data-index="8"></div>
   </div>
 </section>
 
-<div class="series-header reveal">
-  <div class="series-header-left">
-    <span class="series-label">Series 03</span>
-    <h2 class="series-title">Photo I — Show</h2>
-  </div>
-  <span class="series-count">Documentary · Street · Landscape · 5 images</span>
-</div>
-
 <section class="cinema-section">
-  <div class="cinema-duo">
-    <div class="frame reveal" data-index="9">
-      <div class="photo-inner" style="background-image:url('assets/images/photo1-001.jpg');background-size:cover;background-position:center;"></div>
+  <div class="photo-row photo-row-2">
+    <div class="frame reveal" data-index="9" data-cat="documentary">
+      <img src="assets/images/photo1-001.jpg" alt="Separate Shade" loading="lazy">
       <div class="photo-caption"><h3>Separate Shade</h3><p>Los Angeles · 2024 · Documentary</p></div>
       <span class="photo-num">10</span><div class="frame-overlay" data-index="9"></div>
     </div>
-    <div class="frame reveal reveal-delay-1" data-index="10">
-      <div class="photo-inner" style="background-image:url('assets/images/photo1-002.jpg');background-size:cover;background-position:center;"></div>
+    <div class="frame reveal reveal-delay-1" data-index="10" data-cat="still-life">
+      <img src="assets/images/photo1-002.jpg" alt="Head First" loading="lazy">
       <div class="photo-caption"><h3>Head First</h3><p>Los Angeles · 2024 · Still Life</p></div>
       <span class="photo-num">11</span><div class="frame-overlay" data-index="10"></div>
     </div>
   </div>
-  <div class="cinema-trio">
-    <div class="frame reveal" data-index="11">
-      <div class="photo-inner" style="background-image:url('assets/images/photo1-003.jpg');background-size:cover;background-position:center;"></div>
+  <div class="photo-row photo-row-3">
+    <div class="frame reveal" data-index="11" data-cat="documentary">
+      <img src="assets/images/photo1-003.jpg" alt="The Keeper" loading="lazy">
       <div class="photo-caption"><h3>The Keeper</h3><p>Los Angeles · 2024 · Documentary</p></div>
       <span class="photo-num">12</span><div class="frame-overlay" data-index="11"></div>
     </div>
-    <div class="frame reveal reveal-delay-1" data-index="12">
-      <div class="photo-inner" style="background-image:url('assets/images/photo1-004.jpg');background-size:cover;background-position:center;"></div>
+    <div class="frame reveal reveal-delay-1" data-index="12" data-cat="landscape">
+      <img src="assets/images/photo1-004.jpg" alt="Haze" loading="lazy">
       <div class="photo-caption"><h3>Haze</h3><p>Los Angeles · 2024 · Landscape</p></div>
       <span class="photo-num">13</span><div class="frame-overlay" data-index="12"></div>
     </div>
-    <div class="frame reveal reveal-delay-2" data-index="13">
-      <div class="photo-inner" style="background-image:url('assets/images/photo1-005.jpg');background-size:cover;background-position:center;"></div>
+    <div class="frame reveal reveal-delay-2" data-index="13" data-cat="street">
+      <img src="assets/images/photo1-005.jpg" alt="Coast Road" loading="lazy">
       <div class="photo-caption"><h3>Coast Road</h3><p>Santa Monica · 2024 · Street</p></div>
       <span class="photo-num">14</span><div class="frame-overlay" data-index="13"></div>
     </div>
@@ -373,7 +373,7 @@
   ];
   const lb=document.getElementById('lightbox'),lbPhoto=document.getElementById('lightboxPhoto'),lbTitle=document.getElementById('lightboxTitle'),lbSub=document.getElementById('lightboxSub'),lbIdx=document.getElementById('lightboxIndex');
   let cur=0;
-  function show(i){const p=photos[i];if(p.img){lbPhoto.className='lightbox-photo';lbPhoto.style.backgroundImage=`url('${p.img}')`;lbPhoto.style.backgroundSize='cover';lbPhoto.style.backgroundPosition='center';}else{lbPhoto.className='lightbox-photo '+p.cls;lbPhoto.style.backgroundImage='';}lbTitle.textContent=p.title;lbSub.textContent=p.sub;lbIdx.textContent=(i+1).toString().padStart(2,'0')+' / '+photos.length.toString().padStart(2,'0');}
+  function show(i){const p=photos[i];if(p.img){lbPhoto.className='lightbox-photo';lbPhoto.style.backgroundImage=`url('${p.img}')`;lbPhoto.style.backgroundSize='contain';lbPhoto.style.backgroundPosition='center';lbPhoto.style.backgroundRepeat='no-repeat';}else{lbPhoto.className='lightbox-photo '+p.cls;lbPhoto.style.backgroundImage='';lbPhoto.style.backgroundSize='';lbPhoto.style.backgroundRepeat='';}lbTitle.textContent=p.title;lbSub.textContent=p.sub;lbIdx.textContent=(i+1).toString().padStart(2,'0')+' / '+photos.length.toString().padStart(2,'0');}
   function open(i){cur=i;show(cur);lb.classList.add('open');document.body.style.overflow='hidden';}
   function close(){lb.classList.remove('open');document.body.style.overflow='';}
   document.querySelectorAll('.frame-overlay').forEach(el=>el.addEventListener('click',()=>open(+el.dataset.index)));
@@ -382,7 +382,27 @@
   document.getElementById('lightboxPrev').addEventListener('click',()=>{cur=(cur-1+photos.length)%photos.length;show(cur);});
   document.getElementById('lightboxNext').addEventListener('click',()=>{cur=(cur+1)%photos.length;show(cur);});
   document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft'){cur=(cur-1+photos.length)%photos.length;show(cur);}if(e.key==='ArrowRight'){cur=(cur+1)%photos.length;show(cur);}});
-  document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}));
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat=btn.textContent.trim().toLowerCase().replace(/\s+/g,'-');
+      document.querySelectorAll('[data-cat]').forEach(el=>{
+        el.style.display=(cat==='all'||el.dataset.cat===cat)?'':'none';
+      });
+      document.querySelectorAll('.cinema-duo,.cinema-trio,.cinema-mixed,.photo-row').forEach(row=>{
+        const hasVisible=Array.from(row.children).some(c=>c.style.display!=='none'&&c.dataset.cat);
+        row.style.display=hasVisible?'':'none';
+      });
+      document.querySelectorAll('.series-header').forEach(hdr=>{
+        const sec=hdr.nextElementSibling;
+        if(sec){
+          const allHidden=Array.from(sec.querySelectorAll('[data-cat]')).every(el=>el.style.display==='none');
+          hdr.style.display=allHidden?'none':'';
+        }
+      });
+    });
+  });
 </script>
 </body>
 </html>
