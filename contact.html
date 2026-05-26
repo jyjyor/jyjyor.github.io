@@ -276,10 +276,36 @@
   .footer-links a:hover { color: var(--cream); }
   .footer-copy { font-size: 0.6rem; letter-spacing: 0.15em; color: rgba(250,249,246,0.35); }
 
+  /* Bio section */
+  .bio-section {
+    padding: 5rem 3rem;
+    background: var(--cream);
+    border-bottom: 0.5px solid var(--border);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .bio-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--grass);
+    padding-top: 0.3rem;
+  }
+  .bio-text p {
+    font-size: 0.88rem;
+    line-height: 2;
+    color: var(--mid);
+    max-width: 620px;
+  }
+  .bio-text p + p { margin-top: 1.5rem; }
+
   @media (max-width: 768px) {
     nav { padding: 1.2rem 1.5rem; }
     .nav-links { display: none; }
     .contact-hero { padding: 10rem 1.5rem 3rem; }
+    .bio-section { grid-template-columns: 1fr; gap: 1rem; padding: 3rem 1.5rem; }
     .contact-body { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
     footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2rem 1.5rem; }
     .footer-links { flex-wrap: wrap; justify-content: center; }
@@ -297,7 +323,6 @@
   <ul class="nav-links">
     <li><a href="personal profotlio.html">Work</a></li>
     <li><a href="photography.html">Photography</a></li>
-    <li><a href="personal profotlio.html#about">About</a></li>
     <li><a href="contact.html" class="active">Contact</a></li>
     <li><a href="mango.html">Mango</a></li>
   </ul>
@@ -308,6 +333,14 @@
     <div class="contact-hero">
       <p class="contact-eyebrow">Let's connect</p>
       <h1 class="contact-title">Get in<br><em>touch</em></h1>
+    </div>
+
+    <div class="bio-section reveal">
+      <p class="bio-label">About</p>
+      <div class="bio-text">
+        <p>I'm Jiayi — an artist and photographer based in Los Angeles, currently studying at Santa Monica College pursuing degrees in Arts and Communication. My work lives in the space between what people notice and what they overlook.</p>
+        <p>From documenting discarded objects on city sidewalks to working with children through art, I believe creativity is how we make sense of what surrounds us.</p>
+      </div>
     </div>
 
     <div class="contact-body">
