@@ -10,20 +10,23 @@
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --cream: #faf7f0;
-    --ivory: #f0ebe0;
-    --forest: #1b3d2c;
-    --emerald: #2d6a4f;
-    --moss: #52796f;
-    --sage: #84a98c;
-    --pale-sage: #d8ead2;
-    --whisper: #edf5e8;
-    --charcoal: #1e1e1e;
-    --warm-mid: #5a5a52;
-    --muted: #8a8a7e;
-    --border: rgba(45,106,79,0.12);
-    --border-strong: rgba(45,106,79,0.28);
-    --gold: #b8934a;
+    --cream: #faf9f6;
+    --ivory: #f5f3ef;
+    --linen: #ede9e2;
+    --parchment: #e4dfd6;
+    --lime: #a3b89a;
+    --grass: #7a9c72;
+    --apple: #96ae8e;
+    --mint: #b8c8b2;
+    --sage: #c2d0bc;
+    --pale: #dce8d6;
+    --whisper: #f0f3ee;
+    --charcoal: #252320;
+    --mid: #635e58;
+    --muted: #9a948c;
+    --border: rgba(100,130,90,0.13);
+    --border-strong: rgba(85,115,75,0.24);
+    --gold: #c8a84a;
   }
 
   html { scroll-behavior: smooth; }
@@ -37,12 +40,10 @@
     overflow-x: hidden;
   }
 
-  /* Cursor */
   .cursor {
     position: fixed;
-    width: 8px;
-    height: 8px;
-    background: var(--forest);
+    width: 8px; height: 8px;
+    background: var(--grass);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
@@ -51,42 +52,31 @@
   }
   .cursor-ring {
     position: fixed;
-    width: 36px;
-    height: 36px;
-    border: 1px solid rgba(45,106,79,0.4);
+    width: 36px; height: 36px;
+    border: 1px solid rgba(122,156,114,0.4);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9998;
     transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    transition: width 0.3s ease, height 0.3s ease;
   }
 
-  /* Subtle grain */
   .grain {
     position: fixed;
     inset: -50%;
-    width: 200%;
-    height: 200%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+    width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 200;
-    opacity: 0.3;
+    opacity: 0.25;
     animation: grain 0.5s steps(1) infinite;
   }
   @keyframes grain {
-    0%, 100% { transform: translate(0,0); }
-    10% { transform: translate(-2%,-3%); }
-    20% { transform: translate(3%,1%); }
-    30% { transform: translate(-1%,4%); }
-    40% { transform: translate(4%,-2%); }
-    50% { transform: translate(-3%,3%); }
-    60% { transform: translate(2%,-4%); }
-    70% { transform: translate(-4%,1%); }
-    80% { transform: translate(1%,3%); }
-    90% { transform: translate(3%,-1%); }
+    0%,100%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)} 20%{transform:translate(3%,1%)}
+    30%{transform:translate(-1%,4%)} 40%{transform:translate(4%,-2%)} 50%{transform:translate(-3%,3%)}
+    60%{transform:translate(2%,-4%)} 70%{transform:translate(-4%,1%)} 80%{transform:translate(1%,3%)} 90%{transform:translate(3%,-1%)}
   }
 
-  /* Nav */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -95,416 +85,272 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 3rem;
-    background: rgba(250,247,240,0.92);
+    background: rgba(248,250,243,0.93);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 0.5px solid var(--border);
     transition: box-shadow 0.3s;
   }
-  nav.scrolled { box-shadow: 0 2px 24px rgba(27,61,44,0.08); }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(88,176,56,0.1); }
   .nav-logo {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-weight: 300;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--forest);
-    text-decoration: none;
+    font-size: 1.1rem; font-weight: 300;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--charcoal); text-decoration: none;
   }
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a {
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--moss);
-    text-decoration: none;
-    transition: color 0.3s;
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none; transition: color 0.3s;
   }
-  .nav-links a:hover,
-  .nav-links a.active { color: var(--forest); }
+  .nav-links a:hover { color: var(--grass); }
   .nav-links a.active {
-    border-bottom: 0.5px solid var(--emerald);
+    color: var(--grass);
+    border-bottom: 1px solid var(--lime);
     padding-bottom: 2px;
   }
 
   /* ── Hero ── */
   .hero {
     position: relative;
-    height: 100vh;
-    min-height: 600px;
-    display: flex;
-    align-items: flex-end;
+    height: 100vh; min-height: 600px;
+    display: flex; align-items: flex-end;
     overflow: hidden;
     background: var(--cream);
   }
   .hero-art {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
+    position: absolute; inset: 0; z-index: 0; overflow: hidden;
   }
-  /* botanical CSS art — layered leaf shapes + light */
   .hero-art::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse 55% 70% at 80% 35%, rgba(45,106,79,0.18) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 55% at 85% 65%, rgba(82,121,111,0.12) 0%, transparent 55%),
-      radial-gradient(ellipse 65% 40% at 60% 80%, rgba(132,169,140,0.1) 0%, transparent 65%),
-      radial-gradient(ellipse 30% 80% at 92% 50%, rgba(27,61,44,0.12) 0%, transparent 60%);
+      radial-gradient(ellipse 50% 65% at 82% 38%, rgba(114,200,78,0.22) 0%, transparent 60%),
+      radial-gradient(ellipse 38% 50% at 88% 68%, rgba(143,209,110,0.15) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 38% at 65% 82%, rgba(170,217,154,0.12) 0%, transparent 65%);
   }
   .hero-art::after {
     content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, var(--cream) 35%, rgba(250,247,240,0) 70%);
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, var(--cream) 32%, rgba(248,250,243,0) 68%);
   }
   .hero-content {
-    position: relative;
-    z-index: 10;
-    padding: 4rem 3rem;
-    width: 100%;
+    position: relative; z-index: 10;
+    padding: 4rem 3rem; width: 100%;
   }
   .hero-eyebrow {
-    font-size: 0.6rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--emerald);
-    opacity: 0;
-    animation: fadeUp 1s ease 0.3s forwards;
+    font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--grass);
+    opacity: 0; animation: fadeUp 1s ease 0.3s forwards;
     margin-bottom: 1rem;
   }
   .hero-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(5rem, 14vw, 13rem);
-    font-weight: 300;
-    line-height: 0.88;
-    letter-spacing: -0.02em;
-    color: var(--forest);
-    opacity: 0;
-    animation: fadeUp 1.2s ease 0.5s forwards;
-    margin-bottom: 2rem;
+    font-size: clamp(5rem, 14vw, 13rem); font-weight: 300;
+    line-height: 0.88; letter-spacing: -0.02em;
+    color: var(--charcoal);
+    opacity: 0; animation: fadeUp 1.2s ease 0.5s forwards;
+    margin-bottom: 2.5rem;
   }
-  .hero-name em {
-    font-style: italic;
-    color: var(--moss);
-  }
-  .hero-tagline {
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--warm-mid);
-    max-width: 340px;
-    line-height: 2;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.8s forwards;
-  }
+  .hero-name em { font-style: italic; color: var(--grass); }
   .hero-scroll {
-    position: absolute;
-    right: 3rem;
-    bottom: 4rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    z-index: 10;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.5s forwards;
+    position: absolute; right: 3rem; bottom: 4rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+    z-index: 10; opacity: 0; animation: fadeIn 1s ease 1.2s forwards;
   }
   .hero-scroll span {
-    font-size: 0.55rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--moss);
-    writing-mode: vertical-rl;
+    font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--muted); writing-mode: vertical-rl;
   }
   .scroll-line {
-    width: 0.5px;
-    height: 60px;
-    background: linear-gradient(to bottom, var(--emerald), transparent);
+    width: 0.5px; height: 60px;
+    background: linear-gradient(to bottom, var(--lime), transparent);
     animation: scrollPulse 2s ease infinite;
   }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.5; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.1); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.5;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.1)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
   /* ── Section nav cards ── */
-  .section-nav {
-    padding: 0 3rem 6rem;
-    background: var(--cream);
-  }
+  .section-nav { padding: 0 3rem 7rem; background: var(--cream); }
   .section-nav-header {
     padding: 5rem 0 3rem;
     border-top: 0.5px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    display: flex; justify-content: space-between; align-items: baseline;
   }
   .section-nav-label {
-    font-size: 0.58rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--emerald);
+    font-size: 0.58rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--grass);
   }
   .section-nav-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 300;
-    font-style: italic;
-    color: var(--forest);
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; font-style: italic;
+    color: var(--charcoal);
   }
 
   .cards-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
-    gap: 3px;
+    gap: 4px;
   }
-
   .nav-card {
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    display: block;
-    background: var(--forest);
+    position: relative; overflow: hidden;
+    text-decoration: none; display: block;
   }
   .nav-card:first-child { grid-row: span 2; }
-
   .nav-card-art {
-    width: 100%;
-    padding-top: 80%;
-    position: relative;
-    overflow: hidden;
+    width: 100%; padding-top: 80%; position: relative; overflow: hidden;
   }
   .nav-card:first-child .nav-card-art { padding-top: 120%; }
-
   .nav-card-art-inner {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     transition: transform 0.7s ease;
   }
   .nav-card:hover .nav-card-art-inner { transform: scale(1.05); }
 
-  /* Card art — green CSS simulations */
+  /* Warm neutral card arts — real photos will provide color */
   .card-art-artwork {
     background:
-      radial-gradient(ellipse 50% 60% at 40% 45%, rgba(216,234,210,0.35) 0%, transparent 65%),
-      radial-gradient(ellipse 70% 40% at 75% 70%, rgba(45,106,79,0.5) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 20% 80%, rgba(184,147,74,0.2) 0%, transparent 50%),
-      linear-gradient(160deg, #1b3d2c 0%, #253c28 45%, #1a3020 70%, #0f2018 100%);
+      radial-gradient(ellipse 55% 48% at 40% 50%, rgba(215,208,192,0.55) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 65% at 75% 65%, rgba(195,200,180,0.3) 0%, transparent 60%),
+      linear-gradient(160deg, #b8b2a6 0%, #a8a296 48%, #b0aa9e 100%);
   }
   .card-art-photography {
     background:
-      radial-gradient(ellipse 60% 40% at 60% 35%, rgba(216,234,210,0.3) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 70% at 20% 65%, rgba(82,121,111,0.4) 0%, transparent 60%),
-      linear-gradient(135deg, #243830 0%, #1a2c24 50%, #1e3428 100%);
+      radial-gradient(ellipse 60% 42% at 60% 36%, rgba(200,196,178,0.42) 0%, transparent 65%),
+      radial-gradient(ellipse 45% 68% at 20% 64%, rgba(185,194,172,0.32) 0%, transparent 60%),
+      linear-gradient(135deg, #a2a89c 0%, #929888 52%, #9ea496 100%);
   }
   .card-art-about {
     background:
-      radial-gradient(circle 55% at 55% 45%, rgba(45,106,79,0.45) 0%, transparent 65%),
-      radial-gradient(ellipse 80% 40% at 15% 70%, rgba(132,169,140,0.3) 0%, transparent 60%),
-      linear-gradient(200deg, #1a3820 0%, #0f2418 60%, #182e1a 100%);
+      radial-gradient(circle 55% at 52% 48%, rgba(212,204,182,0.5) 0%, transparent 65%),
+      radial-gradient(ellipse 72% 38% at 18% 70%, rgba(194,198,176,0.28) 0%, transparent 60%),
+      linear-gradient(200deg, #b0aa96 0%, #a09884 62%, #a8a490 100%);
   }
   .card-art-contact {
     background:
-      radial-gradient(ellipse 70% 50% at 50% 65%, rgba(100,160,110,0.35) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 60% at 80% 30%, rgba(216,234,210,0.2) 0%, transparent 55%),
-      linear-gradient(160deg, #22381a 0%, #182c14 50%, #1a3018 100%);
+      radial-gradient(ellipse 66% 50% at 50% 62%, rgba(188,198,178,0.38) 0%, transparent 60%),
+      radial-gradient(ellipse 38% 58% at 78% 30%, rgba(200,204,184,0.22) 0%, transparent 55%),
+      linear-gradient(160deg, #9ea892 0%, #8e9882 52%, #98a48e 100%);
   }
 
   .nav-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(27,61,44,0);
-    transition: background 0.4s ease;
-    z-index: 2;
+    position: absolute; inset: 0;
+    background: rgba(30,26,22,0);
+    transition: background 0.4s ease; z-index: 2;
   }
-  .nav-card:hover .nav-card-overlay { background: rgba(27,61,44,0.25); }
+  .nav-card:hover .nav-card-overlay { background: rgba(30,26,22,0.16); }
 
   .nav-card-info {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
+    position: absolute; bottom: 0; left: 0; right: 0;
     padding: 2.5rem 2rem 2rem;
-    background: linear-gradient(to top, rgba(15,32,24,0.95) 0%, rgba(15,32,24,0.4) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(28,24,18,0.88) 0%, rgba(28,24,18,0.3) 55%, transparent 100%);
     z-index: 3;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    display: flex; justify-content: space-between; align-items: flex-end;
   }
-  .nav-card-text {}
   .nav-card-category {
-    font-size: 0.55rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--sage);
-    margin-bottom: 0.4rem;
-    display: block;
+    font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--mint); margin-bottom: 0.4rem; display: block;
   }
   .nav-card-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
-    font-weight: 300;
-    color: var(--cream);
-    line-height: 1.1;
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight: 300;
+    color: var(--cream); line-height: 1.1;
   }
   .nav-card-title em { font-style: italic; }
   .nav-card-desc {
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    color: var(--pale-sage);
-    margin-top: 0.5rem;
-    opacity: 0;
-    transform: translateY(8px);
+    font-size: 0.62rem; letter-spacing: 0.1em;
+    color: var(--sage); margin-top: 0.5rem;
+    opacity: 0; transform: translateY(8px);
     transition: opacity 0.35s ease, transform 0.35s ease;
-    max-width: 220px;
-    line-height: 1.8;
+    max-width: 220px; line-height: 1.8;
   }
   .nav-card:hover .nav-card-desc { opacity: 1; transform: translateY(0); }
   .nav-card-arrow {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.8rem;
-    color: var(--sage);
-    opacity: 0;
-    transform: translate(-8px, 8px);
+    font-size: 1.8rem; color: var(--mint);
+    opacity: 0; transform: translate(-8px, 8px);
     transition: opacity 0.3s ease, transform 0.3s ease;
-    flex-shrink: 0;
-    margin-left: 1rem;
-    padding-bottom: 4px;
+    flex-shrink: 0; margin-left: 1rem; padding-bottom: 4px;
   }
-  .nav-card:hover .nav-card-arrow { opacity: 1; transform: translate(0, 0); }
+  .nav-card:hover .nav-card-arrow { opacity: 1; transform: translate(0,0); }
 
-  /* ── About teaser strip ── */
+  /* ── About teaser ── */
   .about-teaser {
-    background: var(--whisper);
-    padding: 6rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: center;
+    background: var(--ivory);
+    padding: 7rem 3rem;
     border-top: 0.5px solid var(--border);
     border-bottom: 0.5px solid var(--border);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 6rem;
+    align-items: center;
   }
   .teaser-label {
-    font-size: 0.58rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--emerald);
-    margin-bottom: 1.2rem;
+    font-size: 0.58rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--grass); margin-bottom: 1.2rem;
   }
   .teaser-heading {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    font-weight: 300;
-    color: var(--forest);
-    line-height: 1.25;
-    margin-bottom: 1.5rem;
+    font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300;
+    color: var(--charcoal); line-height: 1.25; margin-bottom: 1.5rem;
   }
-  .teaser-heading em { font-style: italic; color: var(--moss); }
+  .teaser-heading em { font-style: italic; color: var(--grass); }
   .teaser-body {
-    font-size: 0.8rem;
-    line-height: 2.1;
-    color: var(--warm-mid);
-    margin-bottom: 2rem;
+    font-size: 0.8rem; line-height: 2.1; color: var(--mid); margin-bottom: 2rem;
   }
   .teaser-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--forest);
-    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.8rem;
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--grass); text-decoration: none;
     border-bottom: 0.5px solid var(--border-strong);
     padding-bottom: 0.4rem;
     transition: gap 0.3s, border-color 0.3s, color 0.3s;
   }
-  .teaser-cta:hover { gap: 1.3rem; border-color: var(--emerald); color: var(--emerald); }
+  .teaser-cta:hover { gap: 1.3rem; border-color: var(--grass); color: var(--lime); }
 
-  .teaser-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+  /* Decorative right side */
+  .teaser-visual {
+    display: flex; flex-direction: column; gap: 1rem;
   }
-  .stat {
+  .discipline-item {
     border-top: 0.5px solid var(--border);
-    padding: 1.5rem 0;
+    padding: 1.2rem 0;
+    display: flex; align-items: center; gap: 1rem;
+    font-size: 0.72rem; letter-spacing: 0.1em;
+    color: var(--mid);
   }
-  .stat:last-child { border-bottom: 0.5px solid var(--border); }
-  .stat-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3.5rem;
-    font-weight: 300;
-    line-height: 1;
-    color: var(--emerald);
-    margin-bottom: 0.4rem;
-  }
-  .stat-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--moss);
+  .discipline-item:last-child { border-bottom: 0.5px solid var(--border); }
+  .discipline-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--lime); flex-shrink: 0;
   }
 
-  /* ── Scroll reveal ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.9s ease, transform 0.9s ease;
-  }
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s ease, transform 0.9s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.22s; }
   .reveal-delay-3 { transition-delay: 0.36s; }
 
-  /* ── Footer ── */
+  /* Footer */
   footer {
-    background: var(--forest);
+    background: var(--charcoal);
     padding: 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
   }
   .footer-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.3em;
-    font-weight: 300;
-    color: var(--cream);
+    font-size: 0.9rem; letter-spacing: 0.3em; font-weight: 300; color: var(--cream);
   }
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
+  .footer-links { display: flex; gap: 2rem; list-style: none; }
   .footer-links a {
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--sage);
-    text-decoration: none;
-    transition: color 0.3s;
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(250,249,246,0.52); text-decoration: none; transition: color 0.3s;
   }
   .footer-links a:hover { color: var(--cream); }
-  .footer-copy {
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    color: var(--moss);
-  }
+  .footer-copy { font-size: 0.6rem; letter-spacing: 0.15em; color: rgba(250,249,246,0.35); }
 
   @media (max-width: 768px) {
     nav { padding: 1.2rem 1.5rem; }
@@ -533,16 +379,15 @@
     <li><a href="photography.html">Photography</a></li>
     <li><a href="personal profotlio.html#about">About</a></li>
     <li><a href="contact.html">Contact</a></li>
+    <li><a href="mango.html">Mango</a></li>
   </ul>
 </nav>
 
-<!-- Hero -->
 <section class="hero">
   <div class="hero-art"></div>
   <div class="hero-content">
     <p class="hero-eyebrow">Artist &nbsp;·&nbsp; Photographer &nbsp;·&nbsp; Santa Monica College</p>
     <h1 class="hero-name">Jia<em>yi</em></h1>
-    <p class="hero-tagline">Finding beauty in what the world leaves behind</p>
   </div>
   <div class="hero-scroll">
     <div class="scroll-line"></div>
@@ -550,21 +395,17 @@
   </div>
 </section>
 
-<!-- Section nav cards -->
 <div class="section-nav">
   <div class="section-nav-header reveal">
     <span class="section-nav-label">Portfolio</span>
     <h2 class="section-nav-title">Explore the work</h2>
   </div>
   <div class="cards-grid">
-
     <a href="personal profotlio.html" class="nav-card reveal">
-      <div class="nav-card-art">
-        <div class="nav-card-art-inner card-art-artwork"></div>
-      </div>
+      <div class="nav-card-art"><div class="nav-card-art-inner card-art-artwork"></div></div>
       <div class="nav-card-overlay"></div>
       <div class="nav-card-info">
-        <div class="nav-card-text">
+        <div>
           <span class="nav-card-category">Visual Art</span>
           <div class="nav-card-title">Art<em>work</em></div>
           <p class="nav-card-desc">Paintings, ceramics, mixed media, and sculpture</p>
@@ -572,14 +413,11 @@
         <span class="nav-card-arrow">→</span>
       </div>
     </a>
-
     <a href="photography.html" class="nav-card reveal reveal-delay-1">
-      <div class="nav-card-art">
-        <div class="nav-card-art-inner card-art-photography"></div>
-      </div>
+      <div class="nav-card-art"><div class="nav-card-art-inner card-art-photography"></div></div>
       <div class="nav-card-overlay"></div>
       <div class="nav-card-info">
-        <div class="nav-card-text">
+        <div>
           <span class="nav-card-category">Documentary</span>
           <div class="nav-card-title">Photo<em>graphy</em></div>
           <p class="nav-card-desc">Street, still life, and documentary series</p>
@@ -587,14 +425,11 @@
         <span class="nav-card-arrow">→</span>
       </div>
     </a>
-
     <a href="personal profotlio.html#about" class="nav-card reveal reveal-delay-1">
-      <div class="nav-card-art">
-        <div class="nav-card-art-inner card-art-about"></div>
-      </div>
+      <div class="nav-card-art"><div class="nav-card-art-inner card-art-about"></div></div>
       <div class="nav-card-overlay"></div>
       <div class="nav-card-info">
-        <div class="nav-card-text">
+        <div>
           <span class="nav-card-category">Story</span>
           <div class="nav-card-title">A<em>bout</em></div>
           <p class="nav-card-desc">Who I am and how I work</p>
@@ -602,14 +437,11 @@
         <span class="nav-card-arrow">→</span>
       </div>
     </a>
-
     <a href="contact.html" class="nav-card reveal reveal-delay-2">
-      <div class="nav-card-art">
-        <div class="nav-card-art-inner card-art-contact"></div>
-      </div>
+      <div class="nav-card-art"><div class="nav-card-art-inner card-art-contact"></div></div>
       <div class="nav-card-overlay"></div>
       <div class="nav-card-info">
-        <div class="nav-card-text">
+        <div>
           <span class="nav-card-category">Connect</span>
           <div class="nav-card-title">Con<em>tact</em></div>
           <p class="nav-card-desc">Collaborations, commissions, and inquiries</p>
@@ -617,11 +449,9 @@
         <span class="nav-card-arrow">→</span>
       </div>
     </a>
-
   </div>
 </div>
 
-<!-- About teaser -->
 <section class="about-teaser">
   <div class="reveal">
     <p class="teaser-label">About</p>
@@ -629,19 +459,12 @@
     <p class="teaser-body">I'm Jiayi — an artist and photographer based in Los Angeles, currently studying at Santa Monica College. My work lives in the space between what people notice and what they overlook.</p>
     <a href="personal profotlio.html#about" class="teaser-cta">Read more →</a>
   </div>
-  <div class="teaser-stats reveal reveal-delay-1">
-    <div class="stat">
-      <div class="stat-number">122</div>
-      <div class="stat-label">Instagram Followers</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">01</div>
-      <div class="stat-label">School Exhibition — 2024</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">02</div>
-      <div class="stat-label">Associate Degrees in Progress</div>
-    </div>
+  <div class="teaser-visual reveal reveal-delay-1">
+    <div class="discipline-item"><span class="discipline-dot"></span>Visual Art &amp; Painting</div>
+    <div class="discipline-item"><span class="discipline-dot"></span>Documentary Photography</div>
+    <div class="discipline-item"><span class="discipline-dot"></span>Ceramics &amp; Sculpture</div>
+    <div class="discipline-item"><span class="discipline-dot"></span>Art Education</div>
+    <div class="discipline-item"><span class="discipline-dot"></span>Community &amp; Children's Projects</div>
   </div>
 </section>
 
@@ -660,45 +483,17 @@
   const cursor = document.getElementById('cursor');
   const ring   = document.getElementById('cursorRing');
   const nav    = document.getElementById('nav');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top  = my + 'px';
-  });
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(animateRing);
-  }
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+  function animateRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animateRing); }
   animateRing();
-
-  document.querySelectorAll('a, .nav-card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width  = '16px';
-      cursor.style.height = '16px';
-      ring.style.width    = '52px';
-      ring.style.height   = '52px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width  = '8px';
-      cursor.style.height = '8px';
-      ring.style.width    = '36px';
-      ring.style.height   = '36px';
-    });
+  document.querySelectorAll('a,.nav-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ cursor.style.width='16px'; cursor.style.height='16px'; ring.style.width='52px'; ring.style.height='52px'; });
+    el.addEventListener('mouseleave',()=>{ cursor.style.width='8px'; cursor.style.height='8px'; ring.style.width='36px'; ring.style.height='36px'; });
   });
-
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  });
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  window.addEventListener('scroll',()=>{ nav.classList.toggle('scrolled',window.scrollY>40); });
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }),{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
