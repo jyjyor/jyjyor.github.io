@@ -133,42 +133,80 @@ const shimmers = Array.from({length:24},()=>({
   al:   0.055+Math.random()*0.085,
 }));
 
-// ─── MANGO SLICE (base shape) ────────────────────────────────
+// ─── MANGO SHAPE helper ──────────────────────────────────────
+// Proper dried-mango silhouette: flat, elongated, asymmetric.
+// Right end rounder, left end slightly tapered — like a real mango slice.
+function mangoPath(bw, bh, jitter) {
+  const j = jitter || 0;
+  X.moveTo(-bw*0.90, bh*0.08);
+  X.bezierCurveTo(-bw*0.62, -bh*0.95+j, bw*0.36, -bh*0.90+j*0.5, bw*0.84, -bh*0.18);
+  X.bezierCurveTo( bw*1.06, bh*0.04, bw*1.00, bh*0.74,  bw*0.70, bh*0.90);
+  X.bezierCurveTo( bw*0.36, bh*0.99,-bw*0.44, bh*0.94, -bw*0.86, bh*0.52);
+  X.bezierCurveTo(-bw*1.05, bh*0.34,-bw*1.05,-bh*0.08, -bw*0.90, bh*0.08);
+}
+
+// Cute manga-style arc eye (no scary white balls)
+function drawMangoEye(ex, ey, r, openAmt) {
+  const er = r * Math.max(openAmt, 0.04);
+  // Arch through top — sleepy ⌢ shape
+  X.beginPath();
+  X.arc(ex, ey+r*0.14, er, Math.PI*1.08, Math.PI*1.92, false);
+  X.strokeStyle = 'rgba(75,28,5,0.82)';
+  X.lineWidth   = r*0.56;
+  X.lineCap     = 'round';
+  X.stroke();
+  if(openAmt > 0.25) {
+    X.beginPath(); X.arc(ex+er*0.30, ey-er*0.12, er*0.26, 0, Math.PI*2);
+    X.fillStyle = 'rgba(255,248,215,0.62)'; X.fill();
+  }
+}
+
+// ─── MANGO SLICE (floating small pieces) ─────────────────────
 function drawSlice(cx, cy, w, h, ang, alpha) {
   X.save(); X.globalAlpha = alpha;
   X.save(); X.translate(cx, cy); X.rotate(ang);
 
-  // Animated soft gradient — gentle breathing
-  const breathe = Math.sin(tick * 0.028 + ang * 2);
-  const gc = (198 + breathe * 24)|0;
-  const g = X.createRadialGradient(-w*0.08,-h*0.12,0,0,0,w);
-  g.addColorStop(0,  `rgba(255,${gc},35,0.98)`);
-  g.addColorStop(0.35,'rgba(255,145,12,0.97)');
-  g.addColorStop(0.70,'rgba(225,95,10,0.94)');
-  g.addColorStop(1,   'rgba(182,68,8,0.66)');
-  X.beginPath(); X.ellipse(0,0,w,h,0,0,Math.PI*2);
+  const breathe = Math.sin(tick*0.028 + ang*2);
+  const gc = (195 + breathe*16)|0;
+
+  // Amber-golden gradient — warm center, darker edges (NOT pumpkin red)
+  const g = X.createRadialGradient(-w*0.10, -h*0.15, 0, w*0.12, h*0.08, w*1.0);
+  g.addColorStop(0,    `rgba(252,${gc},52,0.97)`);
+  g.addColorStop(0.35, 'rgba(238,158,26,0.96)');
+  g.addColorStop(0.70, 'rgba(208,108,12,0.92)');
+  g.addColorStop(1,    'rgba(165,68,8,0.58)');
+
+  X.beginPath(); mangoPath(w, h, 0);
   X.fillStyle=g; X.fill();
 
-  // Wrinkle lines
-  X.save(); X.strokeStyle='rgba(172,108,20,0.18)'; X.lineWidth=0.7*DPR; X.lineCap='round';
-  for(let i=-2;i<=2;i++){
-    const lx=i*w*0.2;
-    X.beginPath(); X.moveTo(lx,-h*0.62); X.quadraticCurveTo(lx+w*0.05,0,lx-w*0.03,h*0.62); X.stroke();
+  // Soft illustrated outline — hand-drawn feel
+  X.strokeStyle='rgba(122,46,6,0.26)'; X.lineWidth=0.9*DPR;
+  X.lineJoin='round'; X.lineCap='round';
+  X.beginPath(); mangoPath(w, h, 0); X.stroke();
+
+  // Wrinkle lines — HORIZONTAL (fiber direction), NOT vertical pumpkin ribs
+  X.strokeStyle='rgba(148,65,8,0.18)'; X.lineWidth=0.6*DPR; X.lineCap='round';
+  for(let i=-1;i<=2;i++){
+    const ly = (i/3.5 - 0.12)*h*1.5;
+    const wv = Math.sin(tick*0.022+ang+i*1.3)*w*0.04;
+    X.beginPath();
+    X.moveTo(-w*0.72+wv, ly - h*0.10);
+    X.bezierCurveTo(-w*0.22, ly+wv*0.4, w*0.18, ly-wv*0.3, w*0.68-wv, ly+h*0.12);
+    X.stroke();
   }
+
+  // Soft top highlight
+  const hlx = Math.sin(tick*0.022+ang)*w*0.16;
+  const hi=X.createRadialGradient(-w*0.18+hlx,-h*0.25,0,w*0.05+hlx,h*0.02,w*0.58);
+  hi.addColorStop(0,'rgba(255,248,205,0.30)'); hi.addColorStop(1,'rgba(255,238,180,0)');
+  X.fillStyle=hi; X.beginPath(); mangoPath(w, h, 0); X.fill();
+
   X.restore();
 
-  // Soft animated highlight that drifts gently
-  const hlx = Math.sin(tick*0.022+ang)*w*0.22, hly = Math.sin(tick*0.018+0.9+ang)*h*0.2;
-  const hi=X.createRadialGradient(-w*0.22+hlx,-h*0.26+hly,0,-w*0.04+hlx,-h*0.04+hly,w*0.72);
-  hi.addColorStop(0,'rgba(255,250,208,0.27)'); hi.addColorStop(1,'rgba(255,242,188,0)');
-  X.fillStyle=hi; X.beginPath(); X.ellipse(0,0,w,h,0,0,Math.PI*2); X.fill();
-
-  X.restore();
-
-  // Water shadow below
-  const sh=X.createRadialGradient(cx,cy+h*0.7,0,cx,cy+h*1.1,w*1.3);
-  sh.addColorStop(0,'rgba(160,120,25,0.18)'); sh.addColorStop(1,'rgba(160,120,25,0)');
-  X.fillStyle=sh; X.beginPath(); X.ellipse(cx,cy+h*0.8,w*1.2,h*0.45,0,0,Math.PI*2); X.fill();
+  // Water shadow
+  const sh=X.createRadialGradient(cx,cy+h*0.80,0,cx,cy+h*1.08,w*1.2);
+  sh.addColorStop(0,'rgba(140,100,18,0.15)'); sh.addColorStop(1,'rgba(140,100,18,0)');
+  X.fillStyle=sh; X.beginPath(); X.ellipse(cx,cy+h*0.85,w*1.05,h*0.32,0,0,Math.PI*2); X.fill();
 
   X.restore();
 }
@@ -184,14 +222,6 @@ function drawFloaters() {
   });
 }
 
-// ─── helpers: draw organic blob outline path ─────────────────
-function blobPath(bw, bh, j1, j2) {
-  X.moveTo(0, -bh);
-  X.bezierCurveTo( bw*0.62+j1,-bh*0.92, bw*1.05+j2,-bh*0.35, bw*1.02, bh*0.15);
-  X.bezierCurveTo( bw*0.96, bh*0.70,  bw*0.56, bh*1.02, 0, bh*0.98);
-  X.bezierCurveTo(-bw*0.56, bh*1.02, -bw*0.96, bh*0.70,-bw*1.02, bh*0.15);
-  X.bezierCurveTo(-bw*1.05+j2,-bh*0.35,-bw*0.62+j1,-bh*0.92, 0, -bh);
-}
 
 // ─── MAIN MANGO CREATURE (left): flat slice → sleepy creature ─
 function drawMangoCreature(fx, fy, ap, np) {
@@ -200,18 +230,17 @@ function drawMangoCreature(fx, fy, ap, np) {
   const cx   = fx + Math.sin(tick*0.018)*2.2*DPR;
   const tilt = Math.sin(tick*0.019)*0.03*ap;
 
-  // Size: wide flat slice (day) → compact upright creature (night)
   const R    = H*0.052;
   const sw   = lerp(R*1.65, R*1.02, ap);
   const sh   = lerp(R*0.40, R*1.18, ap);
   const riseY= lerp(0, -R*0.52, ap);
-  const br   = 1 + Math.sin(tick*0.032)*0.026; // breathing scale
+  const br   = 1 + Math.sin(tick*0.032)*0.026;
 
   X.save();
   X.translate(cx, cy+riseY);
   X.rotate(tilt);
 
-  // ── leaf sprout ──
+  // leaf sprout
   if(ap>0.14){
     const la=ss(0.14,0.50,ap);
     X.save(); X.globalAlpha=la;
@@ -232,110 +261,91 @@ function drawMangoCreature(fx, fy, ap, np) {
     X.restore();
   }
 
-  // ── main body ──
+  // body — mangoPath shape, amber-golden
   {
     const bw=sw*br, bh=sh*br;
-    const j1=Math.sin(tick*0.038+0.4)*bw*0.032;
-    const j2=Math.sin(tick*0.031+2.1)*bw*0.025;
-    const gc=(198+Math.sin(tick*0.028)*22)|0;
+    const jitter=Math.sin(tick*0.038+0.4)*bw*0.022;
+    const gc=(195+Math.sin(tick*0.028)*18)|0;
 
-    // Rich amber-orange body gradient
-    const bg=X.createRadialGradient(-bw*0.24,-bh*0.28,0,0,0,bw*1.22);
-    bg.addColorStop(0,  `rgba(255,${gc},55,1)`);
-    bg.addColorStop(0.26,'rgba(252,162,36,1)');
-    bg.addColorStop(0.58,'rgba(228,115,14,1)');
-    bg.addColorStop(0.86,'rgba(195,82,8,0.96)');
-    bg.addColorStop(1,  'rgba(158,58,6,0.68)');
-    X.beginPath(); blobPath(bw,bh,j1,j2); X.fillStyle=bg; X.fill();
+    const bg=X.createRadialGradient(-bw*0.20,-bh*0.22,0,0,0,bw*1.15);
+    bg.addColorStop(0,  `rgba(255,${gc},52,1)`);
+    bg.addColorStop(0.28,'rgba(242,165,28,1)');
+    bg.addColorStop(0.62,'rgba(218,112,12,0.97)');
+    bg.addColorStop(0.88,'rgba(182,72,8,0.88)');
+    bg.addColorStop(1,  'rgba(148,52,6,0.62)');
+    X.beginPath(); mangoPath(bw,bh,jitter); X.fillStyle=bg; X.fill();
 
-    // Bottom shadow pass
+    // illustrated cartoon outline
+    X.strokeStyle='rgba(118,44,6,0.28)'; X.lineWidth=1.1*DPR;
+    X.lineJoin='round'; X.lineCap='round';
+    X.beginPath(); mangoPath(bw,bh,jitter); X.stroke();
+
+    // underside shadow
     const bs=X.createLinearGradient(0,-bh,0,bh);
-    bs.addColorStop(0.55,'rgba(100,40,4,0)'); bs.addColorStop(1,'rgba(100,40,4,0.28)');
-    X.fillStyle=bs; X.beginPath(); blobPath(bw,bh,j1,j2); X.fill();
+    bs.addColorStop(0.52,'rgba(100,38,4,0)'); bs.addColorStop(1,'rgba(100,38,4,0.26)');
+    X.fillStyle=bs; X.beginPath(); mangoPath(bw,bh,jitter); X.fill();
 
-    // Top highlight
-    const hl=X.createRadialGradient(-bw*0.32,-bh*0.38,0,-bw*0.05,-bh*0.12,bw*0.72);
-    hl.addColorStop(0,'rgba(255,248,195,0.40)'); hl.addColorStop(1,'rgba(255,235,170,0)');
-    X.fillStyle=hl; X.beginPath(); blobPath(bw,bh,j1,j2); X.fill();
+    // top highlight
+    const hlx=Math.sin(tick*0.022)*bw*0.14;
+    const hl=X.createRadialGradient(-bw*0.28+hlx,-bh*0.30,0,bw*0.05+hlx,bh*0.05,bw*0.65);
+    hl.addColorStop(0,'rgba(255,248,205,0.35)'); hl.addColorStop(1,'rgba(255,238,180,0)');
+    X.fillStyle=hl; X.beginPath(); mangoPath(bw,bh,jitter); X.fill();
 
-    // Wrinkle / dried texture lines
-    X.save();
-    X.strokeStyle=`rgba(152,75,8,${lerp(0.22,0.10,ap)})`; X.lineWidth=0.9*DPR; X.lineCap='round';
-    for(let i=-3;i<=3;i++){
-      const lx=i*bw*0.18, wv=Math.sin(tick*0.025+i*0.7)*bw*0.038;
+    // HORIZONTAL wrinkle lines — mango fiber, not pumpkin ribs
+    X.strokeStyle=`rgba(148,62,8,${lerp(0.18,0.10,ap)})`; X.lineWidth=0.7*DPR; X.lineCap='round';
+    for(let i=-2;i<=2;i++){
+      const ly=i*bh*0.24;
+      const wv=Math.sin(tick*0.022+i*1.4)*bw*0.038;
       X.beginPath();
-      X.moveTo(lx+wv,-bh*0.80);
-      X.quadraticCurveTo(lx+wv*0.5+bw*0.04, 0, lx-wv*0.4, bh*0.80);
+      X.moveTo(-bw*0.72+wv, ly-bh*0.04);
+      X.bezierCurveTo(-bw*0.22, ly+wv*0.4, bw*0.18, ly-wv*0.3, bw*0.65-wv, ly+bh*0.06);
       X.stroke();
     }
-    // Horizontal band hints (mango fiber)
-    X.strokeStyle=`rgba(148,70,8,${lerp(0.10,0.05,ap)})`; X.lineWidth=0.7*DPR;
-    for(let i=-2;i<=2;i++){
-      const ly=i*bh*0.26;
-      X.beginPath(); X.moveTo(-bw*0.80,ly); X.quadraticCurveTo(0,ly+bh*0.055,bw*0.80,ly); X.stroke();
-    }
-    X.restore();
   }
 
-  // ── eyes ──
+  // eyes — soft arc (no scary white balls)
   if(ap>0.20){
     const ea=ss(0.20,0.58,ap);
     const bw=sw*br, bh=sh*br;
-    const er=lerp(0,bw*0.138,ea);
-    const ey=-bh*0.10, es=bw*0.26;
+    const er=lerp(0,bw*0.130,ea);
+    const eyY=-bh*0.12, eyX=bw*0.24;
     X.save(); X.globalAlpha=ea;
-    [-es,es].forEach(ex=>{
-      X.beginPath(); X.arc(ex,ey,er,0,Math.PI*2); X.fillStyle='rgba(255,252,238,0.96)'; X.fill();
-      const px=Math.sin(tick*0.018)*er*0.20, py=Math.sin(tick*0.022+0.5)*er*0.16;
-      X.beginPath(); X.arc(ex+px,ey+py,er*0.58,0,Math.PI*2); X.fillStyle='rgba(35,20,6,0.94)'; X.fill();
-      X.beginPath(); X.arc(ex+px+er*0.22,ey+py-er*0.24,er*0.18,0,Math.PI*2); X.fillStyle='rgba(255,252,242,0.88)'; X.fill();
-      X.beginPath(); X.arc(ex+px-er*0.20,ey+py+er*0.15,er*0.10,0,Math.PI*2); X.fillStyle='rgba(255,252,242,0.50)'; X.fill();
-      // cheek blush
-      const cg=X.createRadialGradient(ex*1.30,ey+er*1.1,0,ex*1.30,ey+er*1.1,er*1.4);
-      cg.addColorStop(0,'rgba(238,138,62,0.28)'); cg.addColorStop(1,'rgba(238,138,62,0)');
-      X.fillStyle=cg; X.beginPath(); X.arc(ex*1.30,ey+er*1.1,er*1.4,0,Math.PI*2); X.fill();
-    });
-    // droopy lids — sleepy
-    const droop=lerp(0.55,0.28,ap);
-    const blink=(Math.abs(Math.sin(tick*0.009))<0.05)?1:0;
-    const lid=lerp(droop,1.0,blink);
-    X.fillStyle='rgba(225,118,18,1)';
-    [-es,es].forEach(ex=>{
-      X.beginPath();
-      X.moveTo(ex-er*1.08,ey);
-      X.bezierCurveTo(ex-er*0.5,ey-er*2.0*lid,ex+er*0.5,ey-er*2.0*lid,ex+er*1.08,ey);
-      X.fill();
+    [-eyX,eyX].forEach(ex=>{
+      drawMangoEye(ex, eyY, er, lerp(0.55,0.85,ap));
+      const cg=X.createRadialGradient(ex*1.15,eyY+er*1.8,0,ex*1.15,eyY+er*1.8,er*1.6);
+      cg.addColorStop(0,'rgba(235,128,55,0.22)'); cg.addColorStop(1,'rgba(235,128,55,0)');
+      X.fillStyle=cg; X.beginPath(); X.arc(ex*1.15,eyY+er*1.8,er*1.6,0,Math.PI*2); X.fill();
     });
     X.restore();
   }
 
-  // ── arm stubs ──
+  // arm stubs
   if(ap>0.42){
     const aa=ss(0.42,0.80,ap);
     const bw=sw*br, bh=sh*br;
     const wav=Math.sin(tick*0.072)*0.30;
     X.save(); X.globalAlpha=aa;
     [-1,1].forEach(s=>{
-      X.save(); X.translate(s*bw*0.90,bh*0.05); X.rotate(s*0.52+wav*s);
-      const ag=X.createRadialGradient(0,0,0,0,0,bw*0.22);
-      ag.addColorStop(0,'rgba(248,178,42,0.96)'); ag.addColorStop(1,'rgba(205,112,16,0.72)');
-      X.beginPath(); X.ellipse(0,0,bw*0.115,bw*0.23,0,0,Math.PI*2); X.fillStyle=ag; X.fill();
+      X.save(); X.translate(s*bw*0.88,bh*0.04); X.rotate(s*0.52+wav*s);
+      const ag=X.createRadialGradient(0,0,0,0,0,bw*0.20);
+      ag.addColorStop(0,'rgba(245,175,40,0.96)'); ag.addColorStop(1,'rgba(205,112,16,0.72)');
+      X.beginPath(); X.ellipse(0,0,bw*0.105,bw*0.215,0,0,Math.PI*2); X.fillStyle=ag; X.fill();
       X.restore();
     });
     X.restore();
   }
 
-  // ── legs + round feet ──
+  // legs + feet
   if(ap>0.56){
     const la=ss(0.56,0.88,ap);
     const bw=sw*br, bh=sh*br;
     const sw2=Math.sin(tick*0.092)*0.10;
     X.save(); X.globalAlpha=la;
-    [-bw*0.30,bw*0.30].forEach((lx,i)=>{
-      const lg=X.createRadialGradient(lx,bh*0.82,0,lx,bh*0.82,bw*0.25);
-      lg.addColorStop(0,'rgba(242,168,36,0.96)'); lg.addColorStop(1,'rgba(202,115,16,0.68)');
-      X.beginPath(); X.ellipse(lx,bh*0.82,bw*0.15,bw*0.34,i===0?-sw2:sw2,0,Math.PI*2); X.fillStyle=lg; X.fill();
-      X.beginPath(); X.ellipse(lx,bh*1.32,bw*0.22,bw*0.115,0,0,Math.PI*2); X.fillStyle='rgba(215,145,26,0.88)'; X.fill();
+    [-bw*0.28,bw*0.28].forEach((lx,i)=>{
+      const lg2=X.createRadialGradient(lx,bh*0.80,0,lx,bh*0.80,bw*0.22);
+      lg2.addColorStop(0,'rgba(240,168,34,0.96)'); lg2.addColorStop(1,'rgba(200,112,16,0.68)');
+      X.beginPath(); X.ellipse(lx,bh*0.80,bw*0.14,bw*0.32,i===0?-sw2:sw2,0,Math.PI*2); X.fillStyle=lg2; X.fill();
+      X.beginPath(); X.ellipse(lx,bh*1.28,bw*0.20,bw*0.108,0,0,Math.PI*2); X.fillStyle='rgba(212,142,24,0.88)'; X.fill();
     });
     X.restore();
   }
@@ -348,65 +358,49 @@ function drawMangoCreature(fx, fy, ap, np) {
     gl.addColorStop(0,`rgba(255,195,62,${0.20*np*ap})`); gl.addColorStop(1,'rgba(255,162,35,0)');
     X.fillStyle=gl; X.beginPath(); X.arc(cx,cy+riseY,sw*2.6,0,Math.PI*2); X.fill();
   }
-  // water reflection shadow
   const rs=X.createRadialGradient(cx,fy+2*DPR,0,cx,fy+2*DPR,sw*1.6);
   rs.addColorStop(0,`rgba(135,95,16,${0.16+ap*0.08})`); rs.addColorStop(1,'rgba(135,95,16,0)');
   X.fillStyle=rs; X.beginPath(); X.ellipse(cx,fy+2*DPR,sw*1.6,sw*0.28,0,0,Math.PI*2); X.fill();
 }
 
-// ─── MANGO CAT: chubby sleepy Garfield-feeling dried-mango cat ─
-// Day (ap=0): flat mango slice with tiny ear nubs + thin tail hint
-// Night (ap=1): round chubby cat body, big folded ears, sleepy face, paws, fluffy tail
+// ─── MANGO CAT: sleepy mango-shaped cat, day=tiny slice, night=chubby cat ─
 function drawMangoKitten(kx0, ky0, ap, np) {
   const bob   = Math.sin(tick*0.031+1.8)*2.4*DPR;
   const sway  = Math.sin(tick*0.019+2.5)*0.022*ap;
   const cy    = ky0 + bob;
   const cx    = kx0 + Math.sin(tick*0.022+2.5)*2.0*DPR;
-  const br    = 1 + Math.sin(tick*0.038+1.4)*0.022; // breathing
+  const br    = 1 + Math.sin(tick*0.038+1.4)*0.022;
 
-  // Base unit — grows from tiny slice to full cat
-  const R = lerp(H*0.020, H*0.052, ap);
-
-  // Body dims: wide flat slice → chubby round cat
+  const R  = lerp(H*0.020, H*0.052, ap);
   const bw = lerp(R*1.62, R*1.05, ap) * br;
   const bh = lerp(R*0.38, R*0.90, ap) * br;
-
-  const gc = (198 + Math.sin(tick*0.031+1.4)*22)|0;
+  const gc = (195 + Math.sin(tick*0.031+1.4)*18)|0;
 
   X.save();
   X.translate(cx, cy);
   X.rotate(sway);
 
-  // ── water shadow under the cat ──
+  // water shadow
   {
     const sg=X.createRadialGradient(0,bh*0.88,0,0,bh*1.05,bw*1.6);
     sg.addColorStop(0,`rgba(70,48,8,${0.18+ap*0.06})`); sg.addColorStop(1,'rgba(70,48,8,0)');
     X.fillStyle=sg; X.beginPath(); X.ellipse(0,bh*0.88,bw*1.45,bh*0.28,0,0,Math.PI*2); X.fill();
   }
 
-  // ── tail — drawn behind body, lazy curl to the right ──
+  // tail
   {
     const ta   = lerp(0.35, 0.95, ap);
     const tw   = lerp(Math.max(R*0.06,1.8*DPR), R*0.30, ap);
     const curl = Math.sin(tick*0.065+0.9) * lerp(0.10, 0.55, ap);
-
-    // Tail gradient strip (dried mango curl)
     const tg=X.createLinearGradient(bw*0.5,0,bw*2.8,-R*1.2);
     tg.addColorStop(0,'rgba(218,148,28,0.95)');
     tg.addColorStop(0.5,'rgba(238,172,38,0.88)');
     tg.addColorStop(1,'rgba(248,192,52,0.65)');
-
     X.save(); X.globalAlpha=ta;
     X.beginPath();
     X.moveTo(bw*0.52, bh*0.32);
-    X.bezierCurveTo(
-      bw*(1.55+curl*0.3), bh*(0.85+curl*0.15),
-      bw*(2.55+curl*0.5), bh*(0.10+curl*0.35),
-      bw*(2.28+curl*0.4), R*(-0.72+curl*0.25)
-    );
+    X.bezierCurveTo(bw*(1.55+curl*0.3),bh*(0.85+curl*0.15),bw*(2.55+curl*0.5),bh*(0.10+curl*0.35),bw*(2.28+curl*0.4),R*(-0.72+curl*0.25));
     X.strokeStyle=tg; X.lineWidth=tw; X.lineCap='round'; X.stroke();
-
-    // Fluffy tail tip blob
     const tipX=bw*(2.28+curl*0.4), tipY=R*(-0.72+curl*0.25);
     const tipG=X.createRadialGradient(tipX,tipY,0,tipX,tipY,tw*1.8);
     tipG.addColorStop(0,'rgba(252,205,58,0.88)'); tipG.addColorStop(1,'rgba(245,185,42,0)');
@@ -414,19 +408,16 @@ function drawMangoKitten(kx0, ky0, ap, np) {
     X.restore();
   }
 
-  // ── ears — folded mango-piece triangles, behind head ──
+  // ears
   {
     const eOp  = lerp(0.55, 1.0, ap);
     const earH = lerp(R*0.40, R*1.18, ap);
     const earW = lerp(R*0.22, R*0.52, ap);
-    const headY= lerp(-bh*0.52, -bh*0.78, ap); // where head sits
-
+    const headY= lerp(-bh*0.52, -bh*0.78, ap);
     X.save(); X.globalAlpha=eOp;
     [-1,1].forEach(s=>{
       const ex = s * lerp(bw*0.42, R*0.62, ap);
       const ey = headY;
-
-      // Outer ear — organic folded shape, not just a triangle
       const eg=X.createRadialGradient(ex,ey-earH*0.35,0,ex,ey,earH*1.1);
       eg.addColorStop(0,'rgba(248,190,45,0.97)');
       eg.addColorStop(0.55,'rgba(228,145,20,0.95)');
@@ -435,10 +426,8 @@ function drawMangoKitten(kx0, ky0, ap, np) {
       X.moveTo(ex - s*earW*0.58, ey);
       X.bezierCurveTo(ex - s*earW*0.30, ey-earH*0.42, ex + s*earW*0.08, ey-earH*0.96, ex + s*earW*0.12, ey-earH*0.92);
       X.bezierCurveTo(ex + s*earW*0.48, ey-earH*0.52, ex + s*earW*0.62, ey-earH*0.08, ex + s*earW*0.55, ey);
-      X.closePath();
-      X.fillStyle=eg; X.fill();
-
-      // Inner ear — peachy blush, grows in with transformation
+      X.closePath(); X.fillStyle=eg; X.fill();
+      X.strokeStyle='rgba(118,44,6,0.20)'; X.lineWidth=0.7*DPR; X.lineJoin='round'; X.stroke();
       const ia=ss(0.22,0.65,ap);
       if(ia>0){
         X.save(); X.globalAlpha=ia*0.75;
@@ -446,73 +435,62 @@ function drawMangoKitten(kx0, ky0, ap, np) {
         X.moveTo(ex - s*earW*0.28, ey-earH*0.08);
         X.bezierCurveTo(ex - s*earW*0.10, ey-earH*0.44, ex + s*earW*0.06, ey-earH*0.82, ex + s*earW*0.10, ey-earH*0.76);
         X.bezierCurveTo(ex + s*earW*0.32, ey-earH*0.44, ex + s*earW*0.36, ey-earH*0.08, ex + s*earW*0.28, ey-earH*0.04);
-        X.closePath();
-        X.fillStyle='rgba(255,182,148,0.58)'; X.fill();
+        X.closePath(); X.fillStyle='rgba(255,182,148,0.58)'; X.fill();
         X.restore();
       }
     });
     X.restore();
   }
 
-  // ── body — chubby organic blob ──
+  // body — mangoPath, amber-golden, horizontal wrinkles
   {
-    const bg=X.createRadialGradient(-bw*0.28,-bh*0.30,0,0,0,bw*1.35);
+    const jitter=Math.sin(tick*0.035+0.5)*bw*0.022;
+    const bg=X.createRadialGradient(-bw*0.22,-bh*0.25,0,0,0,bw*1.28);
     bg.addColorStop(0,  `rgba(255,${gc},52,1)`);
-    bg.addColorStop(0.25,'rgba(252,162,35,1)');
-    bg.addColorStop(0.58,'rgba(228,115,15,1)');
-    bg.addColorStop(0.84,'rgba(195,82,8,0.96)');
-    bg.addColorStop(1,  'rgba(155,55,5,0.68)');
+    bg.addColorStop(0.26,'rgba(245,162,32,1)');
+    bg.addColorStop(0.58,'rgba(222,112,14,1)');
+    bg.addColorStop(0.84,'rgba(188,72,8,0.96)');
+    bg.addColorStop(1,  'rgba(152,52,5,0.68)');
+    X.beginPath(); mangoPath(bw,bh,jitter); X.fillStyle=bg; X.fill();
 
-    const j1=Math.sin(tick*0.035+0.5)*bw*0.035;
-    const j2=Math.sin(tick*0.029+2.2)*bw*0.025;
-    X.beginPath(); blobPath(bw,bh,j1,j2); X.fillStyle=bg; X.fill();
+    X.strokeStyle='rgba(118,44,6,0.26)'; X.lineWidth=1.0*DPR;
+    X.lineJoin='round'; X.lineCap='round';
+    X.beginPath(); mangoPath(bw,bh,jitter); X.stroke();
 
-    // underside shadow
     const us=X.createLinearGradient(0,-bh,0,bh);
-    us.addColorStop(0.55,'rgba(105,42,4,0)'); us.addColorStop(1,'rgba(105,42,4,0.30)');
-    X.fillStyle=us; X.beginPath(); blobPath(bw,bh,j1,j2); X.fill();
+    us.addColorStop(0.55,'rgba(105,42,4,0)'); us.addColorStop(1,'rgba(105,42,4,0.28)');
+    X.fillStyle=us; X.beginPath(); mangoPath(bw,bh,jitter); X.fill();
 
-    // top highlight sheen (drifts gently)
-    const hlx=Math.sin(tick*0.022+2.5)*bw*0.18;
-    const hl=X.createRadialGradient(-bw*0.30+hlx,-bh*0.38,0,hlx,-bh*0.08,bw*0.72);
-    hl.addColorStop(0,'rgba(255,248,195,0.38)'); hl.addColorStop(1,'rgba(255,232,168,0)');
-    X.fillStyle=hl; X.beginPath(); blobPath(bw,bh,j1,j2); X.fill();
+    const hlx=Math.sin(tick*0.022+2.5)*bw*0.16;
+    const hl=X.createRadialGradient(-bw*0.28+hlx,-bh*0.32,0,hlx,-bh*0.05,bw*0.68);
+    hl.addColorStop(0,'rgba(255,248,195,0.36)'); hl.addColorStop(1,'rgba(255,232,168,0)');
+    X.fillStyle=hl; X.beginPath(); mangoPath(bw,bh,jitter); X.fill();
 
-    // Dried-mango wrinkle texture lines on body
-    X.save();
-    X.strokeStyle=`rgba(155,72,6,${lerp(0.20,0.09,ap)})`; X.lineWidth=0.85*DPR; X.lineCap='round';
-    for(let i=-2;i<=2;i++){
-      const lx=i*bw*0.22, wv=Math.sin(tick*0.028+i*0.9)*bw*0.036;
+    // HORIZONTAL wrinkles only
+    X.strokeStyle=`rgba(148,62,8,${lerp(0.18,0.09,ap)})`; X.lineWidth=0.75*DPR; X.lineCap='round';
+    for(let i=-1;i<=2;i++){
+      const ly=(i/3.5-0.10)*bh*1.4;
+      const wv=Math.sin(tick*0.025+i*1.3+1.5)*bw*0.036;
       X.beginPath();
-      X.moveTo(lx+wv,-bh*0.76);
-      X.quadraticCurveTo(lx+wv*0.4+bw*0.035,0,lx-wv*0.3,bh*0.76);
+      X.moveTo(-bw*0.68+wv, ly-bh*0.08);
+      X.bezierCurveTo(-bw*0.22, ly+wv*0.4, bw*0.16, ly-wv*0.3, bw*0.60-wv, ly+bh*0.10);
       X.stroke();
     }
-    // Tabby stripe hints — horizontal, very subtle
-    X.strokeStyle=`rgba(182,95,12,${lerp(0.08,0.06,ap)})`; X.lineWidth=1.4*DPR;
-    for(let i=-1;i<=1;i++){
-      const ly=i*bh*0.32;
-      X.beginPath(); X.moveTo(-bw*0.78,ly); X.quadraticCurveTo(0,ly+bh*0.055,bw*0.78,ly); X.stroke();
-    }
-    X.restore();
   }
 
-  // ── head — round chubby, sits on top of body ──
+  // head — round organic shape
   {
     const hAmt=ss(0.10,0.55,ap);
     if(hAmt>0.02){
-      const hr  = lerp(R*0.48, R*0.96, ap);
-      const hy  = lerp(-bh*0.52, -bh*0.80, ap);
-
+      const hr = lerp(R*0.48, R*0.96, ap);
+      const hy = lerp(-bh*0.52, -bh*0.80, ap);
       X.save(); X.globalAlpha=hAmt;
 
-      const hg=X.createRadialGradient(-hr*0.30,hy-hr*0.30,0,0,hy,hr*1.22);
+      const hg=X.createRadialGradient(-hr*0.28,hy-hr*0.28,0,0,hy,hr*1.20);
       hg.addColorStop(0,  `rgba(255,${(gc+8)|0},58,1)`);
-      hg.addColorStop(0.30,'rgba(252,165,38,1)');
-      hg.addColorStop(0.65,'rgba(228,118,16,1)');
-      hg.addColorStop(1,  'rgba(188,80,8,0.88)');
-
-      // Slightly squashed organic head shape
+      hg.addColorStop(0.28,'rgba(248,162,36,1)');
+      hg.addColorStop(0.62,'rgba(225,115,15,1)');
+      hg.addColorStop(1,  'rgba(185,78,8,0.88)');
       X.beginPath();
       X.moveTo(0,hy-hr*0.94);
       X.bezierCurveTo( hr*0.64,hy-hr*0.88, hr*0.98,hy-hr*0.38, hr*0.98,hy+hr*0.10);
@@ -521,16 +499,17 @@ function drawMangoKitten(kx0, ky0, ap, np) {
       X.bezierCurveTo(-hr*0.98,hy-hr*0.38,-hr*0.64,hy-hr*0.88, 0,hy-hr*0.94);
       X.fillStyle=hg; X.fill();
 
-      // Head wrinkle lines
-      X.strokeStyle='rgba(152,72,6,0.13)'; X.lineWidth=0.7*DPR; X.lineCap='round';
-      for(let i=-1;i<=1;i++){
-        const lx=i*hr*0.30;
-        X.beginPath(); X.moveTo(lx,hy-hr*0.68); X.quadraticCurveTo(lx+hr*0.04,hy,lx-hr*0.02,hy+hr*0.68); X.stroke();
-      }
+      X.strokeStyle='rgba(118,44,6,0.22)'; X.lineWidth=0.9*DPR; X.lineJoin='round';
+      X.beginPath();
+      X.moveTo(0,hy-hr*0.94);
+      X.bezierCurveTo( hr*0.64,hy-hr*0.88, hr*0.98,hy-hr*0.38, hr*0.98,hy+hr*0.10);
+      X.bezierCurveTo( hr*0.98,hy+hr*0.65, hr*0.58,hy+hr*0.94, 0,hy+hr*0.94);
+      X.bezierCurveTo(-hr*0.58,hy+hr*0.94,-hr*0.98,hy+hr*0.65,-hr*0.98,hy+hr*0.10);
+      X.bezierCurveTo(-hr*0.98,hy-hr*0.38,-hr*0.64,hy-hr*0.88, 0,hy-hr*0.94);
+      X.stroke();
 
-      // Head top highlight
       const hhl=X.createRadialGradient(-hr*0.34,hy-hr*0.36,0,-hr*0.08,hy-hr*0.10,hr*0.72);
-      hhl.addColorStop(0,'rgba(255,248,198,0.34)'); hhl.addColorStop(1,'rgba(255,232,172,0)');
+      hhl.addColorStop(0,'rgba(255,248,198,0.30)'); hhl.addColorStop(1,'rgba(255,232,172,0)');
       X.fillStyle=hhl;
       X.beginPath();
       X.moveTo(0,hy-hr*0.94);
@@ -540,97 +519,66 @@ function drawMangoKitten(kx0, ky0, ap, np) {
       X.bezierCurveTo(-hr*0.98,hy-hr*0.38,-hr*0.64,hy-hr*0.88, 0,hy-hr*0.94);
       X.fill();
 
-      // Chubby cheek pouches — warm blush circles
       const ca=ss(0.40,0.80,ap);
       if(ca>0){
-        X.save(); X.globalAlpha=ca*0.55;
+        X.save(); X.globalAlpha=ca*0.50;
         [-1,1].forEach(s=>{
-          const cg=X.createRadialGradient(s*hr*0.64,hy+hr*0.24,0,s*hr*0.64,hy+hr*0.24,hr*0.44);
-          cg.addColorStop(0,'rgba(248,155,68,0.42)'); cg.addColorStop(1,'rgba(245,140,58,0)');
-          X.fillStyle=cg; X.beginPath(); X.arc(s*hr*0.64,hy+hr*0.24,hr*0.44,0,Math.PI*2); X.fill();
+          const cg=X.createRadialGradient(s*hr*0.62,hy+hr*0.26,0,s*hr*0.62,hy+hr*0.26,hr*0.42);
+          cg.addColorStop(0,'rgba(248,155,68,0.40)'); cg.addColorStop(1,'rgba(245,140,58,0)');
+          X.fillStyle=cg; X.beginPath(); X.arc(s*hr*0.62,hy+hr*0.26,hr*0.42,0,Math.PI*2); X.fill();
         });
         X.restore();
       }
-
       X.restore();
     }
   }
 
-  // ── front paws — two tiny rounded stubs tucked at bottom ──
+  // front paws
   {
     const pa=ss(0.52,0.90,ap);
     if(pa>0){
       X.save(); X.globalAlpha=pa;
-      const pw=R*0.28, ph=R*0.16;
+      const pw=R*0.28, ph2=R*0.16;
       [-1,1].forEach(s=>{
         const px=s*bw*0.52, py=bh*0.68;
-        const pg=X.createRadialGradient(px,py-ph*0.3,0,px,py,pw*1.3);
-        pg.addColorStop(0,'rgba(248,182,42,1)');
-        pg.addColorStop(0.55,'rgba(222,132,18,0.98)');
-        pg.addColorStop(1,'rgba(188,92,8,0.68)');
-        // Rounded stubby paw
+        const pg=X.createRadialGradient(px,py-ph2*0.3,0,px,py,pw*1.3);
+        pg.addColorStop(0,'rgba(245,180,40,1)');
+        pg.addColorStop(0.55,'rgba(220,130,18,0.98)');
+        pg.addColorStop(1,'rgba(185,90,8,0.68)');
         X.beginPath();
-        X.moveTo(px-pw,py-ph*0.18);
-        X.bezierCurveTo(px-pw,py-ph,px+pw,py-ph,px+pw,py-ph*0.18);
-        X.bezierCurveTo(px+pw,py+ph*0.65,px+pw*0.48,py+ph,px,py+ph*0.82);
-        X.bezierCurveTo(px-pw*0.48,py+ph,px-pw,py+ph*0.65,px-pw,py-ph*0.18);
+        X.moveTo(px-pw,py-ph2*0.18);
+        X.bezierCurveTo(px-pw,py-ph2,px+pw,py-ph2,px+pw,py-ph2*0.18);
+        X.bezierCurveTo(px+pw,py+ph2*0.65,px+pw*0.48,py+ph2,px,py+ph2*0.82);
+        X.bezierCurveTo(px-pw*0.48,py+ph2,px-pw,py+ph2*0.65,px-pw,py-ph2*0.18);
         X.fillStyle=pg; X.fill();
-        // Tiny toe dividers
-        X.strokeStyle='rgba(148,68,6,0.22)'; X.lineWidth=0.6*DPR;
-        [-1,0,1].forEach(t=>{
-          X.beginPath(); X.moveTo(px+t*pw*0.28,py-ph*0.05); X.lineTo(px+t*pw*0.28,py+ph*0.52); X.stroke();
-        });
+        X.strokeStyle='rgba(148,68,6,0.20)'; X.lineWidth=0.6*DPR;
+        [-1,0,1].forEach(t=>{ X.beginPath(); X.moveTo(px+t*pw*0.28,py-ph2*0.05); X.lineTo(px+t*pw*0.28,py+ph2*0.52); X.stroke(); });
       });
       X.restore();
     }
   }
 
-  // ── eyes — sleepy half-closed, Garfield-style drooped lids ──
+  // eyes — soft arc, no scary whites
   {
     const ea=ss(0.30,0.72,ap);
     if(ea>0.02){
-      const hr  = lerp(R*0.48, R*0.96, ap);
-      const hy  = lerp(-bh*0.52, -bh*0.80, ap);
-      const er  = hr*0.175;
-      const ex  = hr*0.30;
-      const ey  = hy+hr*0.06;
-
+      const hr = lerp(R*0.48, R*0.96, ap);
+      const hy = lerp(-bh*0.52, -bh*0.80, ap);
+      const er = hr*0.20;
+      const eyX= hr*0.28;
+      const ey = hy+hr*0.05;
       X.save(); X.globalAlpha=ea;
-      [-ex,ex].forEach(exx=>{
-        // Eye white
-        X.beginPath(); X.arc(exx,ey,er,0,Math.PI*2);
-        X.fillStyle='rgba(255,252,238,0.96)'; X.fill();
-        // Vertical cat slit pupil
-        X.beginPath(); X.ellipse(exx,ey,er*0.24,er*0.78,0,0,Math.PI*2);
-        X.fillStyle='rgba(32,18,4,0.94)'; X.fill();
-        // Bright eye shine
-        X.beginPath(); X.arc(exx+er*0.24,ey-er*0.28,er*0.19,0,Math.PI*2);
-        X.fillStyle='rgba(255,252,242,0.90)'; X.fill();
-        X.beginPath(); X.arc(exx-er*0.20,ey+er*0.18,er*0.10,0,Math.PI*2);
-        X.fillStyle='rgba(255,252,242,0.52)'; X.fill();
-      });
-
-      // Heavy drooping lids — the key Garfield sleepy look
-      const droop = lerp(0.48, 0.32, ap); // more open as ap grows — cat is waking up
-      const blink = (Math.abs(Math.sin(tick*0.008+(exx=>exx)*0)))<0.055 ? 1:0;
-      const lid   = lerp(droop, 1.0, blink);
-      X.fillStyle=`rgba(228,120,18,1)`;
-      [-ex,ex].forEach(exx=>{
-        X.beginPath();
-        X.moveTo(exx-er*1.08,ey);
-        X.bezierCurveTo(exx-er*0.5,ey-er*2.05*lid, exx+er*0.5,ey-er*2.05*lid,exx+er*1.08,ey);
-        X.fill();
-        // Lid crease line
-        X.beginPath();
-        X.moveTo(exx-er*1.05,ey);
-        X.bezierCurveTo(exx,ey-er*0.45, exx,ey-er*0.45,exx+er*1.05,ey);
-        X.strokeStyle='rgba(148,68,6,0.50)'; X.lineWidth=0.8*DPR; X.lineCap='round'; X.stroke();
+      [-eyX,eyX].forEach(ex=>{
+        drawMangoEye(ex, ey, er, lerp(0.55,0.90,ap));
+        const cg=X.createRadialGradient(ex*1.20,ey+er*1.6,0,ex*1.20,ey+er*1.6,er*1.5);
+        cg.addColorStop(0,'rgba(238,138,62,0.22)'); cg.addColorStop(1,'rgba(238,138,62,0)');
+        X.fillStyle=cg; X.beginPath(); X.arc(ex*1.20,ey+er*1.6,er*1.5,0,Math.PI*2); X.fill();
       });
       X.restore();
     }
   }
 
-  // ── nose + whiskers + tiny grumpy mouth ──
+  // nose + whiskers + mouth
   {
     const na=ss(0.55,0.85,ap);
     if(na>0.02){
@@ -638,8 +586,6 @@ function drawMangoKitten(kx0, ky0, ap, np) {
       const hy = lerp(-bh*0.52, -bh*0.80, ap);
       X.save(); X.globalAlpha=na;
       const ny=hy+hr*0.34;
-
-      // Nose — small soft triangle
       X.beginPath();
       X.moveTo(0,ny-hr*0.065);
       X.lineTo(-hr*0.095,ny+hr*0.075); X.lineTo(hr*0.095,ny+hr*0.075);
@@ -647,21 +593,14 @@ function drawMangoKitten(kx0, ky0, ap, np) {
       const ng=X.createRadialGradient(0,ny,0,0,ny,hr*0.15);
       ng.addColorStop(0,'rgba(225,135,78,0.90)'); ng.addColorStop(1,'rgba(208,118,65,0.78)');
       X.fillStyle=ng; X.fill();
-
-      // Philtrum line
       X.beginPath(); X.moveTo(0,ny+hr*0.075); X.lineTo(0,ny+hr*0.135);
       X.strokeStyle='rgba(175,90,22,0.45)'; X.lineWidth=0.7*DPR; X.lineCap='round'; X.stroke();
-
-      // Grumpy-cute flat-line mouth
       X.beginPath();
       X.moveTo(-hr*0.135,ny+hr*0.138);
-      X.bezierCurveTo(-hr*0.07,ny+hr*0.115, hr*0.07,ny+hr*0.115, hr*0.135,ny+hr*0.138);
-      X.strokeStyle='rgba(172,85,18,0.58)'; X.lineWidth=0.85*DPR; X.stroke();
-
-      // Whiskers — 3 each side, slightly drooping (sleepy)
-      X.strokeStyle='rgba(245,228,182,0.52)'; X.lineWidth=0.7*DPR; X.lineCap='round';
-      const wsets=[[-1,0.08],[-1,-0.06],[-1,0.22],[1,0.08],[1,-0.06],[1,0.22]];
-      wsets.forEach(([s,yo])=>{
+      X.bezierCurveTo(-hr*0.07,ny+hr*0.120, hr*0.07,ny+hr*0.120, hr*0.135,ny+hr*0.138);
+      X.strokeStyle='rgba(172,85,18,0.52)'; X.lineWidth=0.85*DPR; X.lineCap='round'; X.stroke();
+      X.strokeStyle='rgba(245,228,182,0.50)'; X.lineWidth=0.7*DPR; X.lineCap='round';
+      [[-1,0.08],[-1,-0.06],[-1,0.22],[1,0.08],[1,-0.06],[1,0.22]].forEach(([s,yo])=>{
         const wy=ny+yo*hr*0.22;
         X.beginPath();
         X.moveTo(s*hr*0.18,wy);
@@ -681,7 +620,6 @@ function drawMangoKitten(kx0, ky0, ap, np) {
 
   X.restore();
 
-  // water shadow stripe
   const rs2=X.createRadialGradient(cx,ky0+1*DPR,0,cx,ky0+1*DPR,bw*1.5);
   rs2.addColorStop(0,`rgba(132,95,14,${0.12+ap*0.05})`); rs2.addColorStop(1,'rgba(132,95,14,0)');
   X.fillStyle=rs2; X.beginPath(); X.ellipse(cx,ky0+1*DPR,bw*1.5,bw*0.26,0,0,Math.PI*2); X.fill();
