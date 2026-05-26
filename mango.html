@@ -58,7 +58,7 @@ function rgba(c,a){ return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`; }
 // ─── PALETTES (soft, muted) ───────────────────────────────────
 const P = {
   day:    { sT:[196,203,190], sB:[226,216,188], wT:[136,184,168], wB:[88,142,124],  lC:[255,238,165], lA:0.14 },
-  sunset: { sT:[208,155,112], sB:[232,198,152], wT:[175,132,100], wB:[140,105,75],  lC:[240,208,152], lA:0.12 },
+  sunset: { sT:[228,162,155], sB:[248,212,178], wT:[128,172,158], wB:[88,134,118],  lC:[248,215,175], lA:0.12 },
   dusk:   { sT:[125,112,148], sB:[182,148,128], wT:[100,112,152], wB:[72,85,122],   lC:[212,188,155], lA:0.09 },
   night:  { sT:[14,20,48],    sB:[28,40,72],    wT:[28,48,92],    wB:[18,32,68],    lC:[172,212,255], lA:0.10 },
 };
@@ -303,18 +303,21 @@ function drawMangoCreature(fx, fy, ap, np) {
     }
   }
 
-  // eyes — soft arc (no scary white balls)
+  // eyes — cute beady dots, soft and sleepy
   if(ap>0.20){
     const ea=ss(0.20,0.58,ap);
     const bw=sw*br, bh=sh*br;
-    const er=lerp(0,bw*0.130,ea);
+    const er=lerp(0, bw*0.068, ea);
     const eyY=-bh*0.12, eyX=bw*0.24;
     X.save(); X.globalAlpha=ea;
     [-eyX,eyX].forEach(ex=>{
-      drawMangoEye(ex, eyY, er, lerp(0.55,0.85,ap));
-      const cg=X.createRadialGradient(ex*1.15,eyY+er*1.8,0,ex*1.15,eyY+er*1.8,er*1.6);
-      cg.addColorStop(0,'rgba(235,128,55,0.22)'); cg.addColorStop(1,'rgba(235,128,55,0)');
-      X.fillStyle=cg; X.beginPath(); X.arc(ex*1.15,eyY+er*1.8,er*1.6,0,Math.PI*2); X.fill();
+      X.beginPath(); X.arc(ex, eyY, er, 0, Math.PI*2);
+      X.fillStyle='rgba(50,18,3,0.88)'; X.fill();
+      X.beginPath(); X.arc(ex+er*0.28, eyY-er*0.30, er*0.28, 0, Math.PI*2);
+      X.fillStyle='rgba(255,248,220,0.72)'; X.fill();
+      const cg=X.createRadialGradient(ex*1.15,eyY+er*2.5,0,ex*1.15,eyY+er*2.5,er*2.2);
+      cg.addColorStop(0,'rgba(235,128,55,0.18)'); cg.addColorStop(1,'rgba(235,128,55,0)');
+      X.fillStyle=cg; X.beginPath(); X.arc(ex*1.15,eyY+er*2.5,er*2.2,0,Math.PI*2); X.fill();
     });
     X.restore();
   }
@@ -642,32 +645,32 @@ function drawSky(p) {
 
   // Sunset phase: c between PH.day and PH.dusk
   if(c>PH.day && c<PH.dusk){
-    // sunsetAmt peaks in the middle of PH.day→PH.dusk
     const sa = c<PH.sunset
       ? ss(PH.day, PH.sunset, c)
       : 1 - ss(PH.sunset, PH.dusk, c);
 
-    // Soft sun disc near the horizon — warm peach blob, not a hard circle
-    const sx=W*0.72, sy=H*0.36;
-    const sun=X.createRadialGradient(sx,sy,0,sx,sy,W*0.38);
-    sun.addColorStop(0,   `rgba(255,230,165,${sa*0.36})`);
-    sun.addColorStop(0.18,`rgba(252,200,118,${sa*0.26})`);
-    sun.addColorStop(0.50,`rgba(245,172,88, ${sa*0.13})`);
-    sun.addColorStop(1,    'rgba(238,148,65,0)');
+    // Sun glow — warm gold core, soft rose outer ring
+    const sx=W*0.72, sy=H*0.34;
+    const sun=X.createRadialGradient(sx,sy,0,sx,sy,W*0.42);
+    sun.addColorStop(0,   `rgba(255,235,175,${sa*0.45})`);
+    sun.addColorStop(0.14,`rgba(255,205,158,${sa*0.32})`);
+    sun.addColorStop(0.38,`rgba(248,172,158,${sa*0.18})`);
+    sun.addColorStop(0.70,`rgba(238,148,168,${sa*0.09})`);
+    sun.addColorStop(1,    'rgba(228,135,155,0)');
     X.fillStyle=sun; X.fillRect(0,0,W,H*.46);
 
-    // Warm horizon band — the brightest part right at the skyline
-    const hb=X.createLinearGradient(0,H*0.26,0,H*0.46);
-    hb.addColorStop(0,  `rgba(252,205,128,0)`);
-    hb.addColorStop(0.62,`rgba(254,210,130,${sa*0.16})`);
-    hb.addColorStop(1,   `rgba(255,215,135,${sa*0.26})`);
-    X.fillStyle=hb; X.fillRect(0,H*0.26,W,H*0.20);
+    // Bright warm-rose horizon band
+    const hb=X.createLinearGradient(0,H*0.24,0,H*0.46);
+    hb.addColorStop(0,   `rgba(255,212,185,0)`);
+    hb.addColorStop(0.55,`rgba(255,195,168,${sa*0.20})`);
+    hb.addColorStop(1,   `rgba(255,210,178,${sa*0.34})`);
+    X.fillStyle=hb; X.fillRect(0,H*0.24,W,H*0.22);
 
-    // Pale golden-pink wash across the whole sky, fades upward
+    // Soft rose-pink luminous wash across the full sky
     const sw=X.createLinearGradient(0,0,0,H*0.46);
-    sw.addColorStop(0,   'rgba(245,185,115,0)');
-    sw.addColorStop(0.55,`rgba(250,192,118,${sa*0.07})`);
-    sw.addColorStop(1,   `rgba(252,198,122,${sa*0.14})`);
+    sw.addColorStop(0,   `rgba(235,162,172,${sa*0.10})`);
+    sw.addColorStop(0.45,`rgba(242,172,162,${sa*0.12})`);
+    sw.addColorStop(1,   `rgba(250,195,168,${sa*0.09})`);
     X.fillStyle=sw; X.fillRect(0,0,W,H*.46);
   }
 }
@@ -718,20 +721,20 @@ function drawWater(p) {
       ? ss(PH.day, PH.sunset, c)
       : 1 - ss(PH.sunset, PH.dusk, c);
 
-    // Warm horizontal tint on the upper water — as if the peach sky is casting light
-    const ref=X.createLinearGradient(0,wY,0,wY+H*0.28);
-    ref.addColorStop(0,  `rgba(252,205,118,${sa*0.13})`);
-    ref.addColorStop(0.5,`rgba(248,195,108,${sa*0.07})`);
-    ref.addColorStop(1,   'rgba(245,185,98,0)');
-    X.fillStyle=ref; X.fillRect(0,wY,W,H*0.28);
+    // Subtle rose-gold tint on upper water surface only — water stays distinct from sky
+    const ref=X.createLinearGradient(0,wY,0,wY+H*0.18);
+    ref.addColorStop(0,  `rgba(248,195,175,${sa*0.09})`);
+    ref.addColorStop(0.5,`rgba(245,185,165,${sa*0.05})`);
+    ref.addColorStop(1,   'rgba(240,175,155,0)');
+    X.fillStyle=ref; X.fillRect(0,wY,W,H*0.18);
 
-    // Sun path on water — soft radial pool of warm light on the right side
+    // Very soft sun-path shimmer on the right — barely visible
     const px=W*0.72;
-    const path=X.createRadialGradient(px,wY,0,px,wY+H*0.30,W*0.28);
-    path.addColorStop(0,  `rgba(255,220,148,${sa*0.10})`);
-    path.addColorStop(0.45,`rgba(252,205,128,${sa*0.05})`);
-    path.addColorStop(1,   'rgba(248,188,108,0)');
-    X.fillStyle=path; X.fillRect(0,wY,W,H*0.55);
+    const path=X.createRadialGradient(px,wY,0,px,wY+H*0.25,W*0.22);
+    path.addColorStop(0,  `rgba(255,215,168,${sa*0.07})`);
+    path.addColorStop(0.45,`rgba(250,198,155,${sa*0.04})`);
+    path.addColorStop(1,   'rgba(245,182,138,0)');
+    X.fillStyle=path; X.fillRect(0,wY,W,H*0.45);
   }
 
   // Near-surface luminance band (sky reflected just below waterline)
