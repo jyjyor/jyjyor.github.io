@@ -189,7 +189,7 @@
     <p class="hero-sub">Stills from a world in motion</p>
   </div>
   <div class="hero-count">
-    <div class="hero-count-num">09</div>
+    <div class="hero-count-num">14</div>
     <div class="hero-count-label">Photographs</div>
   </div>
 </section>
@@ -201,6 +201,7 @@
   <button class="filter-btn">Still Life</button>
   <button class="filter-btn">Portrait</button>
   <button class="filter-btn">Documentary</button>
+  <button class="filter-btn">Landscape</button>
 </div>
 
 <div class="series-header reveal">
@@ -277,6 +278,46 @@
   </div>
 </section>
 
+<div class="series-header reveal">
+  <div class="series-header-left">
+    <span class="series-label">Series 03</span>
+    <h2 class="series-title">Photo I — Show</h2>
+  </div>
+  <span class="series-count">Documentary · Street · Landscape · 5 images</span>
+</div>
+
+<section class="cinema-section">
+  <div class="cinema-duo">
+    <div class="frame reveal" data-index="9">
+      <div class="photo-inner" style="background-image:url('assets/images/photo1-001.jpg');background-size:cover;background-position:center;"></div>
+      <div class="photo-caption"><h3>Separate Shade</h3><p>Los Angeles · 2024 · Documentary</p></div>
+      <span class="photo-num">10</span><div class="frame-overlay" data-index="9"></div>
+    </div>
+    <div class="frame reveal reveal-delay-1" data-index="10">
+      <div class="photo-inner" style="background-image:url('assets/images/photo1-002.jpg');background-size:cover;background-position:center;"></div>
+      <div class="photo-caption"><h3>Head First</h3><p>Los Angeles · 2024 · Still Life</p></div>
+      <span class="photo-num">11</span><div class="frame-overlay" data-index="10"></div>
+    </div>
+  </div>
+  <div class="cinema-trio">
+    <div class="frame reveal" data-index="11">
+      <div class="photo-inner" style="background-image:url('assets/images/photo1-003.jpg');background-size:cover;background-position:center;"></div>
+      <div class="photo-caption"><h3>The Keeper</h3><p>Los Angeles · 2024 · Documentary</p></div>
+      <span class="photo-num">12</span><div class="frame-overlay" data-index="11"></div>
+    </div>
+    <div class="frame reveal reveal-delay-1" data-index="12">
+      <div class="photo-inner" style="background-image:url('assets/images/photo1-004.jpg');background-size:cover;background-position:center;"></div>
+      <div class="photo-caption"><h3>Haze</h3><p>Los Angeles · 2024 · Landscape</p></div>
+      <span class="photo-num">13</span><div class="frame-overlay" data-index="12"></div>
+    </div>
+    <div class="frame reveal reveal-delay-2" data-index="13">
+      <div class="photo-inner" style="background-image:url('assets/images/photo1-005.jpg');background-size:cover;background-position:center;"></div>
+      <div class="photo-caption"><h3>Coast Road</h3><p>Santa Monica · 2024 · Street</p></div>
+      <span class="photo-num">14</span><div class="frame-overlay" data-index="13"></div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="footer-name">Jiayi</div>
   <ul class="footer-links">
@@ -324,10 +365,15 @@
     {cls:'p9',title:'Blue Hour',sub:'Downtown LA · 2023 · Street'},
     {cls:'p6',title:'Midnight Commute',sub:'Los Angeles · 2023 · Street'},
     {cls:'p8',title:'The Last Bus',sub:'Los Angeles · 2024 · Documentary'},
+    {img:'assets/images/photo1-001.jpg',title:'Separate Shade',sub:'Los Angeles · 2024 · Documentary'},
+    {img:'assets/images/photo1-002.jpg',title:'Head First',sub:'Los Angeles · 2024 · Still Life'},
+    {img:'assets/images/photo1-003.jpg',title:'The Keeper',sub:'Los Angeles · 2024 · Documentary'},
+    {img:'assets/images/photo1-004.jpg',title:'Haze',sub:'Los Angeles · 2024 · Landscape'},
+    {img:'assets/images/photo1-005.jpg',title:'Coast Road',sub:'Santa Monica · 2024 · Street'},
   ];
   const lb=document.getElementById('lightbox'),lbPhoto=document.getElementById('lightboxPhoto'),lbTitle=document.getElementById('lightboxTitle'),lbSub=document.getElementById('lightboxSub'),lbIdx=document.getElementById('lightboxIndex');
   let cur=0;
-  function show(i){const p=photos[i];lbPhoto.className='lightbox-photo '+p.cls;lbTitle.textContent=p.title;lbSub.textContent=p.sub;lbIdx.textContent=(i+1).toString().padStart(2,'0')+' / '+photos.length.toString().padStart(2,'0');}
+  function show(i){const p=photos[i];if(p.img){lbPhoto.className='lightbox-photo';lbPhoto.style.backgroundImage=`url('${p.img}')`;lbPhoto.style.backgroundSize='cover';lbPhoto.style.backgroundPosition='center';}else{lbPhoto.className='lightbox-photo '+p.cls;lbPhoto.style.backgroundImage='';}lbTitle.textContent=p.title;lbSub.textContent=p.sub;lbIdx.textContent=(i+1).toString().padStart(2,'0')+' / '+photos.length.toString().padStart(2,'0');}
   function open(i){cur=i;show(cur);lb.classList.add('open');document.body.style.overflow='hidden';}
   function close(){lb.classList.remove('open');document.body.style.overflow='';}
   document.querySelectorAll('.frame-overlay').forEach(el=>el.addEventListener('click',()=>open(+el.dataset.index)));
