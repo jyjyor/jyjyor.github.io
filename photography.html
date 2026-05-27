@@ -191,9 +191,7 @@
   <div class="hero-bg"></div>
   <div class="hero-film"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Visual Archive &nbsp;·&nbsp; Los Angeles &nbsp;·&nbsp; 2023 — 2024</p>
     <h1 class="hero-title">Photo<em>graphy</em></h1>
-    <p class="hero-sub">Stills from a world in motion</p>
   </div>
   <div class="hero-count">
     <div class="hero-count-num">14</div>
@@ -204,22 +202,20 @@
 <div class="filter-bar reveal">
   <span class="filter-label">Series</span>
   <button class="filter-btn active">All</button>
-  <button class="filter-btn">Street</button>
-  <button class="filter-btn">Still Life</button>
-  <button class="filter-btn">Portrait</button>
-  <button class="filter-btn">Documentary</button>
-  <button class="filter-btn">Landscape</button>
+  <button class="filter-btn">A</button>
+  <button class="filter-btn">B</button>
+  <button class="filter-btn">C</button>
 </div>
 
-<div class="series-header reveal">
+<div class="series-header reveal" data-series="a">
   <div class="series-header-left">
-    <span class="series-label">Series 01</span>
-    <h2 class="series-title">What People Throw Away</h2>
+    <span class="series-label">Series A</span>
+    <h2 class="series-title">A</h2>
   </div>
-  <span class="series-count">Documentary · 5 images</span>
+  <span class="series-count">6 images</span>
 </div>
 
-<section class="cinema-section">
+<section class="cinema-section" data-series="a">
   <div class="cinema-full reveal" data-index="0" data-cat="documentary">
     <div class="photo-inner p1"></div>
     <div class="photo-caption"><h3>Pressed Into Pavement</h3><p>Los Angeles · 2024 · Documentary</p></div>
@@ -257,15 +253,15 @@
   </div>
 </section>
 
-<div class="series-header reveal">
+<div class="series-header reveal" data-series="b">
   <div class="series-header-left">
-    <span class="series-label">Series 02</span>
-    <h2 class="series-title">City Light</h2>
+    <span class="series-label">Series B</span>
+    <h2 class="series-title">B</h2>
   </div>
-  <span class="series-count">Street · 3 images</span>
+  <span class="series-count">3 images</span>
 </div>
 
-<section class="cinema-section">
+<section class="cinema-section" data-series="b">
   <div class="cinema-mixed">
     <div class="frame reveal" data-index="6" data-cat="street">
       <div class="photo-inner p9"></div>
@@ -285,7 +281,15 @@
   </div>
 </section>
 
-<section class="cinema-section">
+<div class="series-header reveal" data-series="c">
+  <div class="series-header-left">
+    <span class="series-label">Series C</span>
+    <h2 class="series-title">C</h2>
+  </div>
+  <span class="series-count">5 images</span>
+</div>
+
+<section class="cinema-section" data-series="c">
   <div class="photo-row photo-row-2">
     <div class="frame reveal" data-index="9" data-cat="documentary">
       <img src="assets/images/photo1-001.jpg" alt="Separate Shade" loading="lazy">
@@ -322,7 +326,7 @@
   <ul class="footer-links">
     <li><a href="https://www.instagram.com/jyjyor" target="_blank" rel="noopener noreferrer">Instagram</a></li>
     <li><a href="photography.html">Photography</a></li>
-    <li><a href="personal profotlio.html">Artwork</a></li>
+    <li><a href="artwork.html">Artwork</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
   <p class="footer-copy">© 2024 Jiayi. All rights reserved.</p>
@@ -385,20 +389,10 @@
     btn.addEventListener('click',()=>{
       document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      const cat=btn.textContent.trim().toLowerCase().replace(/\s+/g,'-');
-      document.querySelectorAll('[data-cat]').forEach(el=>{
-        el.style.display=(cat==='all'||el.dataset.cat===cat)?'':'none';
-      });
-      document.querySelectorAll('.cinema-duo,.cinema-trio,.cinema-mixed,.photo-row').forEach(row=>{
-        const hasVisible=Array.from(row.children).some(c=>c.style.display!=='none'&&c.dataset.cat);
-        row.style.display=hasVisible?'':'none';
-      });
-      document.querySelectorAll('.series-header').forEach(hdr=>{
-        const sec=hdr.nextElementSibling;
-        if(sec){
-          const allHidden=Array.from(sec.querySelectorAll('[data-cat]')).every(el=>el.style.display==='none');
-          hdr.style.display=allHidden?'none':'';
-        }
+      const s=btn.textContent.trim().toLowerCase();
+      document.querySelectorAll('[data-series]').forEach(el=>{
+        el.style.display=(s==='all'||el.dataset.series===s)?'':'none';
+        if(el.style.display!=='none') el.querySelectorAll('.reveal').forEach(r=>r.classList.add('visible'));
       });
     });
   });
