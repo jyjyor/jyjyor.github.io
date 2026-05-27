@@ -57,8 +57,8 @@ function rgba(c,a){ return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`; }
 
 // ─── PALETTES (soft, muted) ───────────────────────────────────
 const P = {
-  day:    { sT:[196,203,190], sB:[226,216,188], wT:[136,184,168], wB:[88,142,124],  lC:[255,238,165], lA:0.14 },
-  sunset: { sT:[228,162,155], sB:[248,212,178], wT:[128,172,158], wB:[88,134,118],  lC:[248,215,175], lA:0.12 },
+  day:    { sT:[242,238,195], sB:[255,250,215], wT:[155,210,205], wB:[88,158,148],  lC:[255,238,165], lA:0.14 },
+  sunset: { sT:[228,162,155], sB:[248,212,178], wT:[128,178,172], wB:[82,135,128],  lC:[248,215,175], lA:0.12 },
   dusk:   { sT:[125,112,148], sB:[182,148,128], wT:[100,112,152], wB:[72,85,122],   lC:[212,188,155], lA:0.09 },
   night:  { sT:[14,20,48],    sB:[28,40,72],    wT:[28,48,92],    wB:[18,32,68],    lC:[172,212,255], lA:0.10 },
 };
@@ -739,8 +739,8 @@ function drawWater(p) {
 
   // Near-surface luminance band (sky reflected just below waterline)
   const surfBand=X.createLinearGradient(0,wY,0,wY+H*0.10);
-  surfBand.addColorStop(0, isN ? 'rgba(62,92,158,0.11)' : 'rgba(205,232,218,0.09)');
-  surfBand.addColorStop(1, isN ? 'rgba(22,40,85,0)'     : 'rgba(162,210,190,0)');
+  surfBand.addColorStop(0, isN ? 'rgba(62,92,158,0.11)' : 'rgba(185,225,235,0.09)');
+  surfBand.addColorStop(1, isN ? 'rgba(22,40,85,0)'     : 'rgba(145,205,215,0)');
   X.fillStyle=surfBand; X.fillRect(0,wY,W,H*0.10);
 
   // Subtle depth-variation bands — slow undulating darker/lighter layers
@@ -752,7 +752,7 @@ function drawWater(p) {
     bg.addColorStop(0,'rgba(0,0,0,0)');
     bg.addColorStop(0.5, isN
       ? `rgba(12,24,58,${bAl})`
-      : `rgba(62,108,88,${bAl})`);
+      : `rgba(55,108,105,${bAl})`);
     bg.addColorStop(1,'rgba(0,0,0,0)');
     X.fillStyle=bg; X.fillRect(0,bandY-H*0.038,W,H*0.076);
   }
@@ -780,7 +780,7 @@ function drawFlowWaves(p) {
       X.lineTo(x, y);
     }
     const al = isN ? fw.al * 0.52 : fw.al;
-    X.strokeStyle = isN ? `rgba(128,182,242,${al})` : `rgba(255,255,245,${al})`;
+    X.strokeStyle = isN ? `rgba(128,182,242,${al})` : `rgba(210,248,252,${al})`;
     X.lineWidth = 0.85 * DPR;
     X.stroke();
   });
@@ -797,8 +797,8 @@ function drawCreekCurrents() {
 
     // Feathered streak: transparent at both ends, solid in the middle
     const sg = X.createLinearGradient(xPos,yPos,xPos+len,yPos);
-    const midCol = isN ? `rgba(52,82,148,${s.al})` : `rgba(168,215,195,${s.al})`;
-    const endCol = isN ? 'rgba(22,38,80,0)'        : 'rgba(128,184,162,0)';
+    const midCol = isN ? `rgba(52,82,148,${s.al})` : `rgba(148,215,210,${s.al})`;
+    const endCol = isN ? 'rgba(22,38,80,0)'        : 'rgba(110,180,175,0)';
     sg.addColorStop(0,    endCol);
     sg.addColorStop(0.14, midCol);
     sg.addColorStop(0.86, midCol);
@@ -827,7 +827,7 @@ function drawSurfaceShimmer(p) {
     const twinkle = (Math.sin(tick*s.tw + s.ph)*0.5+0.5);
     const al = s.al * twinkle;
     if(al < 0.005) return;
-    const col = isN ? [168,205,255] : [235,252,238];
+    const col = isN ? [168,205,255] : [210,248,252];
     const sg = X.createRadialGradient(x,y,0,x,y,s.w*DPR);
     sg.addColorStop(0, rgba(col, al));
     sg.addColorStop(1, rgba(col, 0));
@@ -841,7 +841,7 @@ function drawSurfaceShimmer(p) {
 // Mango ripples — soft expanding rings around floating pieces
 function drawMangoRipples() {
   const isN = pct() > PH.dusk;
-  const ringCol = isN ? [82,122,198] : [192,228,212];
+  const ringCol = isN ? [82,122,198] : [165,220,228];
 
   // Rings around drifting floater pieces
   floaters.forEach(f=>{
