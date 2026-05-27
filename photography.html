@@ -44,28 +44,22 @@
   .nav-links a:hover { color: var(--grass); }
   .nav-links a.active { color: var(--grass); border-bottom: 1px solid var(--lime); padding-bottom: 2px; }
 
-  /* ── Hero — dark cinematic ── */
-  .hero { position: relative; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; background: #1a1714; }
-  .hero-bar-top, .hero-bar-bottom { position: absolute; left: 0; right: 0; height: 80px; background: #1a1714; z-index: 5; pointer-events: none; }
-  .hero-bar-top { top: 0; } .hero-bar-bottom { bottom: 0; }
-  .hero-film { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-  .hero-film::before {
-    content: ''; position: absolute; inset: 0;
+  /* ── Hero — light, matching home page ── */
+  .hero { position: relative; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; background: var(--cream); }
+  .hero-bg {
+    position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse 55% 38% at 65% 55%, rgba(180,170,148,0.12) 0%, transparent 65%),
-      radial-gradient(ellipse 35% 70% at 25% 70%, rgba(160,155,135,0.08) 0%, transparent 55%),
-      linear-gradient(160deg, #2a2420 0%, #1e1a16 45%, #161210 100%);
+      radial-gradient(ellipse 58% 52% at 78% 38%, rgba(114,200,78,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 38% 62% at 88% 68%, rgba(143,209,110,0.13) 0%, transparent 55%),
+      linear-gradient(to right, var(--cream) 30%, rgba(248,250,243,0) 72%);
+    z-index: 0;
   }
-  .hero-film::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.004) 3px, rgba(255,255,255,0.004) 4px); pointer-events: none; }
-  .hero-bg { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,8,6,0.1) 0%, rgba(10,8,6,0.02) 40%, rgba(10,8,6,0.6) 100%); z-index: 1; }
   .hero-content { position: relative; z-index: 10; padding: 5rem 3rem; width: 100%; }
-  .hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(250,249,246,0.5); opacity: 0; animation: fadeUp 1s ease 0.3s forwards; margin-bottom: 1rem; }
-  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(4rem,12vw,11rem); font-weight: 300; line-height: 0.9; letter-spacing: -0.02em; color: var(--cream); opacity: 0; animation: fadeUp 1.2s ease 0.5s forwards; margin-bottom: 2rem; }
-  .hero-title em { font-style: italic; color: var(--sage); }
-  .hero-sub { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(250,249,246,0.45); max-width: 280px; line-height: 2; opacity: 0; animation: fadeUp 1s ease 0.8s forwards; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(4rem,12vw,11rem); font-weight: 300; line-height: 0.9; letter-spacing: -0.02em; color: var(--charcoal); opacity: 0; animation: fadeUp 1.2s ease 0.5s forwards; margin-bottom: 2rem; }
+  .hero-title em { font-style: italic; color: var(--grass); }
   .hero-count { position: absolute; right: 3rem; bottom: 5rem; z-index: 10; text-align: right; opacity: 0; animation: fadeIn 1s ease 1.4s forwards; }
-  .hero-count-num { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; line-height: 1; color: var(--cream); opacity: 0.15; }
-  .hero-count-label { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(250,249,246,0.4); }
+  .hero-count-num { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; line-height: 1; color: var(--charcoal); opacity: 0.12; }
+  .hero-count-label { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
@@ -156,7 +150,6 @@
 
   @media (max-width: 768px) {
     nav { padding: 1.2rem 1.5rem; } .nav-links { display: none; }
-    .hero-bar-top, .hero-bar-bottom { height: 50px; }
     .cinema-full { height: 70vh; }
     .cinema-duo, .cinema-trio, .cinema-mixed { grid-template-columns: 1fr; }
     .cinema-duo .frame, .cinema-trio .frame, .cinema-mixed .frame { height: 55vh; }
@@ -186,10 +179,7 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-bar-top"></div>
-  <div class="hero-bar-bottom"></div>
   <div class="hero-bg"></div>
-  <div class="hero-film"></div>
   <div class="hero-content">
     <h1 class="hero-title">Photo<em>graphy</em></h1>
   </div>
@@ -200,7 +190,6 @@
 </section>
 
 <div class="filter-bar reveal">
-  <span class="filter-label">Series</span>
   <button class="filter-btn active">All</button>
   <button class="filter-btn">A</button>
   <button class="filter-btn">B</button>
@@ -209,7 +198,6 @@
 
 <div class="series-header reveal" data-series="a">
   <div class="series-header-left">
-    <span class="series-label">Series A</span>
     <h2 class="series-title">A</h2>
   </div>
   <span class="series-count">1 image</span>
@@ -227,7 +215,6 @@
 
 <div class="series-header reveal" data-series="b">
   <div class="series-header-left">
-    <span class="series-label">Series B</span>
     <h2 class="series-title">B</h2>
   </div>
   <span class="series-count">3 images</span>
@@ -255,7 +242,6 @@
 
 <div class="series-header reveal" data-series="c">
   <div class="series-header-left">
-    <span class="series-label">Series C</span>
     <h2 class="series-title">C</h2>
   </div>
   <span class="series-count">1 image</span>
